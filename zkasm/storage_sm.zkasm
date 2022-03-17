@@ -16,3 +16,8 @@ INCLUDE "storage_sm_set_with_sibling.zkasm"
 
 ; Rest of instructions: selPC=1, JMPZ 0
 ; Executor = specific itinerary accross the rom
+
+notEndPol:
+    0 => HASH_LEFT, HASH_RIGHT, OLD_ROOT, NEW_ROOT, VALUE_LOW, VALUE_HIGH, SIBLING_VALUE_HASH, RKEY, SIBLING_RKEY, RKEY_BIT, LEVEL
+    ${isEndPolinomial()}    :JMPZ(notEndPol)
+                            :JMP(Run)

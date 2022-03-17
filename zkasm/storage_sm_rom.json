@@ -1759,6 +1759,42 @@
    "iLatchSet": "1",
    "line": 137,
    "fileName": "/home/fractasy/git/zkasmstorage/zkasm/storage_sm_set_with_sibling.zkasm"
+  },
+  {
+   "CONST": "0",
+   "setHASH_LEFT": 1,
+   "setHASH_RIGHT": 1,
+   "setOLD_ROOT": 1,
+   "setNEW_ROOT": 1,
+   "setVALUE_LOW": 1,
+   "setVALUE_HIGH": 1,
+   "setSIBLING_VALUE_HASH": 1,
+   "setRKEY": 1,
+   "setSIBLING_RKEY": 1,
+   "setRKEY_BIT": 1,
+   "setLEVEL": 1,
+   "line": 21,
+   "fileName": "/home/fractasy/git/zkasmstorage/zkasm/storage_sm.zkasm"
+  },
+  {
+   "freeInTag": {
+    "op": "functionCall",
+    "funcName": "isEndPolinomial",
+    "params": []
+   },
+   "inFREE": "1",
+   "iJmpz": "1",
+   "addressLabel": "notEndPol",
+   "line": 22,
+   "address": 211,
+   "fileName": "/home/fractasy/git/zkasmstorage/zkasm/storage_sm.zkasm"
+  },
+  {
+   "iJmp": "1",
+   "addressLabel": "Run",
+   "line": 23,
+   "address": 0,
+   "fileName": "/home/fractasy/git/zkasmstorage/zkasm/storage_sm.zkasm"
   }
  ],
  "labels": {
@@ -1796,6 +1832,7 @@
   "SWS_ClimbTree": 191,
   "SWS_SiblingIsLeft3": 194,
   "SWS_SiblingIsRight3": 202,
-  "SWS_Latch": 210
+  "SWS_Latch": 210,
+  "notEndPol": 211
  }
 }
