@@ -7,42 +7,28 @@
 (\$(\{[^\}]*\})?)       { yytext = yytext.length == 1 ? "" : yytext.slice(2, -1); return 'TAG'; }
 [\r\n]+                 { return "LF";}
 [ \t]+                  { /* console.log("Empty spaces"); */ }
-A                       { return 'A'; }
-B                       { return 'B'; }
-C                       { return 'C'; }
-D                       { return 'D'; }
-E                       { return 'E'; }
-SR                      { return 'SR'; }
-CTX                     { return 'CTX'; }
-SP                      { return 'SP'; }
+HASH_LEFT               { return 'HASH_LEFT'; }
+HASH_RIGHT              { return 'HASH_RIGHT'; }
+OLD_ROOT                { return 'OLD_ROOT'; }
+NEW_ROOT                { return 'NEW_ROOT'; }
+VALUE_LOW               { return 'VALUE_LOW'; }
+VALUE_HIGH              { return 'VALUE_HIGH'; }
+SIBLING_VALUE_HASH      { return 'SIBLING_VALUE_HASH'; }
+FREE                    { return 'FREE'; }
+RKEY                    { return 'RKEY'; }
+SIBLING_RKEY            { return 'SIBLING_RKEY'; }
+RKEY_BIT                { return 'RKEY_BIT'; }
+LEVEL                   { return 'LEVEL'; }
 PC                      { return 'PC'; }
-GAS                     { return 'GAS'; }
-uPC                     { return 'uPC'; }
-STEP                    { return 'STEP'; }
-MAXMEM                  { return 'MAXMEM'; }
-MLOAD                   { return 'MLOAD' }
-MSTORE                  { return 'MSTORE' }
-HASHR                   { return 'HASHR' }
-HASHW                   { return 'HASHW' }
-HASHE                   { return 'HASHE' }
-ECRECOVER               { return 'ECRECOVER' }
+HASH                    { return 'HASH' }
+LATCH_SET               { return 'LATCH_SET' }
+LATCH_GET               { return 'LATCH_GET' }
+CLIMB_RKEY              { return 'CLIMB_RKEY' }
+CLIMB_SIBLING_RKEY      { return 'CLIMB_SIBLING_RKEY' }
+JMPZ                    { return 'JMPZ' }
 JMP                     { return 'JMP' }
-JMPC                    { return 'JMPC' }
-ASSERT                  { return 'ASSERT' }
-SLOAD                   { return 'SLOAD' }
-SSTORE                  { return 'SSTORE' }
-ARITH                   { return 'ARITH' }
-SHL                     { return 'SHL' }
-SHR                     { return 'SHR' }
-INST_MAP_ROM            { return 'INST_MAP_ROM' }
-SYS                     { return 'SYS' }
-MEM                     { return 'MEM' }
-CODE                    { return 'CODE' }
-STACK                   { return 'STACK' }
+ROTATE_LEVEL            { return 'ROTATE_LEVEL' }
 INCLUDE                 { return 'INCLUDE' }
-VAR                     { return 'VAR' }
-GLOBAL                  { return 'GLOBAL' }
-CTX                     { return 'CTX' }
 \"[^"]+\"               { yytext = yytext.slice(1,-1); return 'STRING'; }
 [a-zA-Z_][a-zA-Z$_0-9\+\.\>\<\=\-\!]*  { return 'IDENTIFIER'; }
 \:                      { return ':'; }
@@ -105,10 +91,6 @@ statment
         {
             $$ = $1;
         }
-    | varDef
-        {
-            $$ = $1;
-        }
     | include
         {
             $$ = $1;
@@ -149,13 +131,6 @@ label
         }
     ;
 
-varDef
-    :  VAR scope IDENTIFIER
-        {
-            $$ = {type: "var", scope: $2, name: $3}
-        }
-    ;
-
 command
     : COMMAND
         {
@@ -163,11 +138,6 @@ command
         }
     ;
 
-
-scope
-    : GLOBAL
-    | CTX
-    ;
 
 include
     : INCLUDE STRING
@@ -264,202 +234,53 @@ opList
     ;
 
 op
-    : MLOAD '(' addr ')'
+    : JMP '(' IDENTIFIER ')'
         {
-            $$ = $3;
-            $$.mRD = 1;
+            $$ = {iJmp: 1n, addressLabel: $3}
         }
-    | MSTORE '(' addr ')'
+    | JMPZ '(' IDENTIFIER ')'
         {
-            $$ = $3;
-            $$.mWR = 1;
+            $$ = {iJmpz: 1n, addressLabel: $3}
         }
-    | HASHR '(' hashId ')'
+    | HASH
         {
-            $$ = $3;
-            $$.hashRD = 1;
+            $$ = {iHash: 1n}
         }
-    | HASHW '(' hashId ')'
+    | LATCH_SET
         {
-            $$ = $3;
-            $$.hashWR = 1;
+            $$ = {iLatchSet: 1n}
         }
-    | HASHE '(' hashId ')'
+    | LATCH_GET
         {
-            $$ = $3;
-            $$.hashE = 1;
+            $$ = {iLatchGet: 1n}
         }
-    | JMP '(' IDENTIFIER ')'
+    | CLIMB_RKEY
         {
-            $$ = {JMP: 1, offset: $3}
+            $$ = {iClimbRkey: 1n}
         }
-    | JMP '(' E ')'
+    | CLIMB_SIBLING_RKEY 
         {
-            $$ = {JMP: 1, ind: 1, offset: 0}
+            $$ = { iClimbSiblingRkey: 1n}
         }
-    | JMPC '(' IDENTIFIER ')'
+    | ROTATE_LEVEL 
         {
-            $$ = {JMPC: 1, offset: $3}
-        }
-    | JMPC '(' E ')'
-        {
-            $$ = {JMPC: 1, ind: 1, offset: 0}
-        }
-    | ASSERT
-        {
-            $$ = {assert: 1}
-        }
-    | ECRECOVER
-        {
-            $$ = {ecRecover: 1}
-        }
-    | SLOAD
-        {
-            $$ = {sRD: 1}
-        }
-    | SSTORE
-        {
-            $$ = {sWR: 1}
-        }
-    | ARITH 
-        {
-            $$ = { arith: 1}
-        }
-    | SHL 
-        {
-            $$ = { shl: 1}
-        }
-    | SHR 
-        {
-            $$ = { shr: 1}
-        }
-    | INST_MAP_ROM
-        {
-            $$ = {instMapRom: 1}
+            $$ = { iRotateLevel: 1n}
         }
     ;
 
 
 reg 
-    : A 
-    | B 
-    | C 
-    | D 
-    | E 
-    | SR 
-    | CTX 
-    | SP 
-    | PC 
-    | GAS 
-    | uPC 
-    | STEP 
-    | MAXMEM 
-    ;
-
-
-addr
-    : SP
-        {
-            $$ = { isStack: 1, isCode: 0, ind:0, incCode:0, incStack:0, offset: 0}
-        }
-    | SP '+' NUMBER
-        {
-            $$ = { isStack: 1, isCode: 0, ind:0, incCode:0, incStack: 0, offset: $3}
-        }
-    | SP '-' NUMBER
-        {
-            $$ = { isStack: 1, isCode: 0, ind:0, incCode:0, incStack: 0, offset: -$3}
-        }
-    | SP '++'
-        {
-            $$ = { isStack: 1, isCode: 0, ind:0, incCode:1, incStack: 1, offset: 0}
-        }
-    | SP '--'
-        {
-            $$ = { isStack: 1, isCode: 0, ind:0, incCode:0, incStack: -1, offset: 0}
-        }
+    : HASH_LEFT 
+    | HASH_RIGHT
+    | OLD_ROOT
+    | NEW_ROOT
+    | VALUE_LOW
+    | VALUE_HIGH
+    | SIBLING_VALUE_HASH
+    | RKEY
+    | SIBLING_RKEY
+    | RKEY_BIT
+    | LEVEL
     | PC
-        {
-            $$ = { isStack: 0, isCode: 1, ind:0, incCode:0, incStack: 0, offset: 0}
-        }
-    | PC '+' NUMBER
-        {
-            $$ = { isStack: 0, isCode: 1, ind:0, incCode:0, incStack: 0, offset: $3}
-        }
-    | PC '-' NUMBER
-        {
-            $$ = { isStack: 0, isCode: 1, ind:0, incCode:0, incStack: 0, offset: -$3}
-        }
-    | PC '++'
-        {
-            $$ = { isStack: 0, isCode: 1, ind:0, incCode:1, incStack: 0, offset: 0}
-        }
-    | PC '--'
-        {
-            $$ = { isStack: 0, isCode: 1, ind:0, incCode:-1, incStack: 0, offset: 0}
-        }
-    | SYS ':' E '+' NUMBER
-        {
-            $$ = { isStack: 0, isCode: 0, ind:1, incCode:0, incStack: 0, offset: $5}
-        }
-    | SYS ':' E '-' NUMBER
-        {
-            $$ = { isStack: 0, isCode: 0, ind:1, incCode:0, incStack: 0, offset: -$5}
-        }
-    | SYS ':' E
-        {
-            $$ = { isStack: 0, isCode: 0, ind:1, iincCodenc:0, incStack: 0, offset: 0}
-        }
-    | MEM ':' E '+' NUMBER
-        {
-            $$ = { isStack: 1, isCode: 1, ind:1, incCode:0, incStack: 0, offset: $5}
-        }
-    | MEM ':' E '-' NUMBER
-        {
-            $$ = { isStack: 1, isCode: 1, ind:1, incCode:0, incStack: 0, offset: -$5}
-        }
-    | MEM ':' E
-        {
-            $$ = { isStack: 1, isCode: 1, ind:1, incCode:0, incStack: 0, offset: 0}
-        }
-    | CODE ':' E '+' NUMBER
-        {
-            $$ = { isStack: 0, isCode: 1, ind:1, incCode:0, incStack: 0, offset: $5}
-        }
-    | CODE ':' E '-' NUMBER
-        {
-            $$ = { isStack: 0, isCode: 1, ind:1, incCode:0, incStack: 0, offset: -$5}
-        }
-    | CODE ':' E
-        {
-            $$ = { isStack: 0, isCode: 1, ind:1, incCode:0, incStack: 0, offset: 0}
-        }
-    | STACK ':' E '+' NUMBER
-        {
-            $$ = { isStack: 1, isCode: 1, ind:1, incCode:0, incStack: 0, offset: $5}
-        }
-    | STACK ':' E '-' NUMBER
-        {
-            $$ = { isStack: 1, isCode: 1, ind:1, incCode:0, incStack: 0, offset: -$5}
-        }
-    | STACK ':' E
-        {
-            $$ = { isStack: 1, isCode: 1, ind:1, incCode:0, incStack: 0, offset: 0}
-        }
-    | IDENTIFIER
-        {
-            $$ = { offset: $1 }
-        }
-
     ;
 
-hashId
-    : NUMBER
-        {
-            $$ = {ind: 0, offset:$1}
-        }
-    | E
-        {
-            $$ = {ind: 1, offset:0}
-        }
-    ;

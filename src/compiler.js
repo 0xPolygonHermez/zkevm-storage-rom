@@ -7,16 +7,12 @@ const { trace } = require("console");
 const stringifyBigInts = require("ffjavascript").utils.stringifyBigInts;
 
 module.exports = async function compile(fileName, ctx) {
-
     let isMain;
     if (!ctx) {
         ctx = {
             definedLabels: {},
             refs: [],
             out: [],
-            vars: {},
-            lastGlobalVarAssigned: -1,
-            lastLocalVarCtxAssigned: -1
         }
         isMain = true;
     } else {
@@ -41,23 +37,6 @@ module.exports = async function compile(fileName, ctx) {
             await compile(fullFileNameI, ctx);
             if (pendingCommands.length>0) error(l, "command not allowed before include");
             lastLineAllowsCommand = false;
-        } else if (l.type == "var") {
-            if (typeof ctx.vars[l.name] !== "undefined") error(l, `Variable ${l.name} already defined`);
-            if (l.scope == "GLOBAL") {
-                ctx.vars[l.name] = {
-                    scope: "GLOBAL",
-                    offset: ++ctx.lastGlobalVarAssigned
-                }
-            } else if (l.scope == "CTX") {
-                ctx.vars[l.name] = {
-                    scope: "CTX",
-                    offset: ++(ctx.lastLocalVarCtxAssigned)
-                }
-            } else {
-                throw error(l, `Invalid scope ${l.scope}`);
-            }
-            if (pendingCommands.length>0) error(l, "command not allowed before var");
-            lastLineAllowsCommand = false;
         } else if (l.type == "step") {
             const traceStep = {
                 // type: "step"
@@ -80,7 +59,7 @@ module.exports = async function compile(fileName, ctx) {
                 traceStep.cmdBefore = pendingCommands;
                 pendingCommands = [];
             }
-            lastLineAllowsCommand = !(traceStep.JMP || traceStep.JMPC);
+            lastLineAllowsCommand = !(traceStep.JMP || traceStep.JMPZ);
         } else if (l.type == "label") {
             const id = l.identifier
             if (ctx.definedLabels[id]) error(l, `RedefinedLabel: ${id}` );
@@ -103,29 +82,14 @@ module.exports = async function compile(fileName, ctx) {
 
     if (isMain) {
         for (let i=0; i<ctx.out.length; i++) {
-            if (
-                    (typeof ctx.out[i].offset !== "undefined") &&
-                    (isNaN(ctx.out[i].offset))
-               ) {
-                if (ctx.out[i].JMP || ctx.out[i].JMPC) {
-                    if (typeof ctx.definedLabels[ctx.out[i].offset] === "undefined") {
-                        error(ctx.out[i].line, `Label: ${ctx.out[i].offset} not defined.`);
+            if (typeof ctx.out[i].addressLabel !== "undefined") {
+                if (ctx.out[i].iJmp || ctx.out[i].iJmpz) {
+                    if (typeof ctx.definedLabels[ctx.out[i].addressLabel] === "undefined") {
+                        error(ctx.out[i].line, `Label: ${ctx.out[i].addressLabel} not defined.`);
                     }
-                    ctx.out[i].offsetLabel = ctx.out[i].offset;
-                    ctx.out[i].offset = ctx.definedLabels[ctx.out[i].offset];                
+                    ctx.out[i].address = ctx.definedLabels[ctx.out[i].addressLabel];                
                 } else {
-                    ctx.out[i].offsetLabel = ctx.out[i].offset;
-                    if (typeof ctx.vars[ctx.out[i].offset] === "undefined") {
-                        error(ctx.out[i].line, `Variable: ${ctx.out[i].offset} not defined.`);
-                    }
-                    if (ctx.vars[ctx.out[i].offset].scope === 'CTX') {
-                        ctx.out[i].useCTX = 1;
-                    } else if (ctx.vars[ctx.out[i].offset].scope === 'GLOBAL') {
-                        ctx.out[i].useCTX = 0;
-                    } else {
-                        error(ctx.out[i].line, `Invalid variable scpoe: ${ctx.out[i].offset} not defined.`);
-                    }               
-                    ctx.out[i].offset = ctx.vars[ctx.out[i].offset].offset;
+                    throw new Error("Should not enter here");
                 }
             }
             try {

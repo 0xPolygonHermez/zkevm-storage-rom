@@ -3,6 +3,18 @@
 %%
 (0x[0-9A-Fa-f][0-9A-Fa-f_]*)|([0-9][0-9_]*)          { yytext = Number(yytext.replace(/\_/g, "")); return 'NUMBER'; }
 [ \t\r\n]+                  { /* console.log("Empty spaces"); */ }
+HASH_LEFT               { return 'HASH_LEFT'; }
+HASH_RIGHT              { return 'HASH_RIGHT'; }
+OLD_ROOT                { return 'OLD_ROOT'; }
+NEW_ROOT                { return 'NEW_ROOT'; }
+VALUE_LOW               { return 'VALUE_LOW'; }
+VALUE_HIGH              { return 'VALUE_HIGH'; }
+SIBLING_VALUE_HASH      { return 'SIBLING_VALUE_HASH'; }
+FREE                    { return 'FREE'; }
+RKEY                    { return 'RKEY'; }
+SIBLING_RKEY            { return 'SIBLING_RKEY'; }
+RKEY_BIT                { return 'RKEY_BIT'; }
+LEVEL                   { return 'LEVEL'; }
 A                       { return 'A'; }
 B                       { return 'B'; }
 C                       { return 'C'; }
