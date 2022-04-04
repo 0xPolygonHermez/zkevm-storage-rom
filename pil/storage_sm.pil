@@ -38,6 +38,7 @@ pol bool commited setSiblingRkey;
 pol bool commited setRkeybit;
 pol bool commited setLevel;
 pol bool commited iHash;
+pol bool commited iHashType;
 pol bool commited iLatchSet;
 pol bool commited iLatchGet;
 pol bool commited iClimbRkey;
@@ -156,7 +157,7 @@ level3' = setLevel*(op3-level3) + level3;
 pc' = setPC*(op0-pc) + pc;
 
 // Instruction that guarantees that op = hash(hl, hr); the poseidon SM will do the work; the result will be feeded by free
-iHash [hashLeft0, hashLeft1, hashLeft2, hashLeft3, hashRight0, hashRight1, hashRight2, hashRight3, op0, op1, op2, op3] in Poseidon.Latch[in0, in1, in2, in3, in4, in5, in6, in7, out0, out1, out2, out3];
+iHash [hashLeft0, hashLeft1, hashLeft2, hashLeft3, hashRight0, hashRight1, hashRight2, hashRight3, iHashType, op0, op1, op2, op3] in Poseidon.Latch[in0, in1, in2, in3, in4, in5, in6, in7, inHashType, out0, out1, out2, out3];
 
 pol climbedKey0 = (level0*(rkey0*2 + rkeyBit - rkey0) + rkey0);
 pol climbedKey1 = (level1*(rkey0*2 + rkeyBit - rkey1) + rkey1);
@@ -183,10 +184,11 @@ pc' = doJump*(iAddress - pc - 1) + pc + 1;
 // Once the work is done, the rest of instructions must be:
 // if op0 = $n-1 (last instruction of the program) then pc=0 (jump to the beginning of the program)
 
-[iHash, iLatchSet, iLatchGet, iClimbRkey, iClimbSiblingRkey, iRotateLevel, iJmpz, iJmp, iConst0, iConst1, iConst2, iConst3, iAddress, pc] in 
-[rHash, rLatchSet, rLatchGet, rClimbRkey, rClimbSiblingRkey, rRotateLevel, rJmpz, rJmp, rConst0, rConst1, rConst2, rConst3, rAddress, rLine];
+[iHash, iHashType, iLatchSet, iLatchGet, iClimbRkey, iClimbSiblingRkey, iRotateLevel, iJmpz, iJmp, iConst0, iConst1, iConst2, iConst3, iAddress, pc] in 
+[rHash, rHashType, rLatchSet, rLatchGet, rClimbRkey, rClimbSiblingRkey, rRotateLevel, rJmpz, rJmp, rConst0, rConst1, rConst2, rConst3, rAddress, rLine];
 
 pol constant rHash;
+pol constant rHashType;
 pol constant rLatchSet;
 pol constant rClimbRkey;
 pol constant rClimbSiblingRkey;

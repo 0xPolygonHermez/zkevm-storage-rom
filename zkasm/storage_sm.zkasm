@@ -1,13 +1,16 @@
 Run:
 
-    ${GetIsUpdate()} => RKEY_BIT
-    RKEY_BIT                :JMPZ(Update)
-    ${GetIsSetReplacingZero()} => RKEY_BIT
-    RKEY_BIT                :JMPZ(Set_ReplacingZero)
-    ${GetIsSetWithSibling()} => RKEY_BIT
-    RKEY_BIT                :JMPZ(Set_WithSibling)
-    ${GetIsGet()} => RKEY_BIT
-    RKEY_BIT                :JMPZ(Get)
+    ${isGet()}              :JMPZ(Run_IsUpdate)
+                            :JMP(Get)
+Run_IsUpdate:
+    ${isUpdate()}           :JMPZ(Run_IsSetReplacingZero)
+                            :JMP(Update)
+Run_IsSetReplacingZero:
+    ${isSetReplacingZero()} :JMPZ(Run_IsSetWithSibling)
+                            :JMP(Set_ReplacingZero)
+Run_IsSetWithSibling:
+    ${isSetWithSibling()}   :JMPZ(notEndPol)
+                            :JMP(Set_WithSibling)
 
 INCLUDE "storage_sm_get.zkasm"
 INCLUDE "storage_sm_update.zkasm"

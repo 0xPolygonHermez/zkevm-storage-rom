@@ -8,21 +8,21 @@ Set_WithSibling:
     VALUE_LOW => HASH_LEFT
     ${GetValueHigh()} => VALUE_HIGH
     VALUE_HIGH => HASH_RIGHT
-    $ => HASH_RIGHT                 :HASH
+    $ => HASH_RIGHT                 :HASH0
     RKEY => HASH_LEFT
-    $ => HASH_RIGHT                 :HASH
+    $ => HASH_RIGHT                 :HASH0
     0x1=> HASH_LEFT
-    $ => NEW_ROOT                   :HASH
+    $ => NEW_ROOT                   :HASH1
 
     ; OldRoot = LeafNodeHash = Hash( 1 | 0 | 0 | 0, Hash( Key, Hash( SiblingValue[0-3], SiblingValue[4-7] ) ) );
     ${GetSiblingValueLow()} => HASH_LEFT
     ${GetSiblingValueHigh()} => HASH_RIGHT
-    $ => SIBLING_VALUE_HASH         :HASH
+    $ => SIBLING_VALUE_HASH         :HASH0
     SIBLING_VALUE_HASH => HASH_RIGHT
     RKEY => HASH_LEFT
-    $ => HASH_RIGHT                 :HASH
+    $ => HASH_RIGHT                 :HASH0
     0x1 => HASH_LEFT
-    $ => NEW_ROOT                   :HASH
+    $ => NEW_ROOT                   :HASH0
 
     ; Init LEVEL, and rotate as per key level
     0x1 => LEVEL
@@ -45,7 +45,7 @@ SWS_SiblingIsLeft1:
     ; NewRoot = Hash( SiblingHash, LeafNodeHash )
     OLD_ROOT => HASH_LEFT
     NEW_ROOT => HASH_RIGHT
-    $ => NEW_ROOT                   :HASH
+    $ => NEW_ROOT                   :HASH0
 
                                     :JMP(SWS_ClimbBranch)
 
@@ -54,7 +54,7 @@ SWS_SiblingIsRight1:
     ; NewRoot = Hash( LeafNodeHash, SiblingHash )
     NEW_ROOT => HASH_LEFT
     OLD_ROOT => HASH_RIGHT
-    $ => NEW_ROOT                   :HASH
+    $ => NEW_ROOT                   :HASH0
 
 SWS_ClimbBranch:
 
@@ -72,7 +72,7 @@ SWS_SiblingIsLeft2:
     ; NewRoot = Hash ( SiblingHash, NewRoot )
     ${GetSiblingHash()} => HASH_LEFT
     NEW_ROOT => HASH_RIGHT
-    $ => NEW_ROOT                   :HASH
+    $ => NEW_ROOT                   :HASH0
 
                                     :JMP(SWS_ClimbBranch)
 
@@ -81,7 +81,7 @@ SWS_SiblingIsRight2:
     ; NewRoot = Hash ( NewRoot, SiblingHash )
     NEW_ROOT => HASH_LEFT
     ${GetSiblingHash()} => HASH_RIGHT
-    $ => NEW_ROOT                   :HASH
+    $ => NEW_ROOT                   :HASH0
 
                                     :JMP(SWS_ClimbBranch)
 
@@ -89,9 +89,9 @@ SWS_StartOldRoot:
     ; OldRoot = Hash( 1 | 0 | 0 | 0, Hash( SiblingKey, Hash( SiblingValue[0-3], SiblingValue[4-7] ) ) );
     SIBLING_VALUE_HASH => HASH_RIGHT
     SIBLING_RKEY => HASH_LEFT
-    $ => HASH_RIGHT                 :HASH
+    $ => HASH_RIGHT                 :HASH0
     0x1 => HASH_LEFT
-    $ => OLD_ROOT                   :HASH
+    $ => OLD_ROOT                   :HASH0
 
 SWS_ClimbTree:
     ${GetTopOfTree()}               :JMPZ(SWS_Latch)        ; If we are at the top of the tree, then go to SWS_Latch
@@ -104,11 +104,11 @@ SWS_SiblingIsLeft3:
     ; NewRoot = Hash ( SiblingHash, NewRoot )
     NEW_ROOT => HASH_RIGHT
     ${GetSiblingHash()} => HASH_LEFT
-    $ => NEW_ROOT                   :HASH
+    $ => NEW_ROOT                   :HASH0
 
     ; OldRoot = Hash ( SiblingHash, OldRoot )
     OLD_ROOT => HASH_RIGHT
-    $ => OLD_ROOT                   :HASH
+    $ => OLD_ROOT                   :HASH0
 
     ; Update remaining key
                                     :CLIMB_RKEY
@@ -121,11 +121,11 @@ SWS_SiblingIsRight3:
     ; NewRoot = Hash ( NewRoot, SiblingHash )
     NEW_ROOT => HASH_LEFT
     ${GetSiblingHash()} => HASH_RIGHT
-    $ => NEW_ROOT                   :HASH
+    $ => NEW_ROOT                   :HASH0
 
     ; OldRoot = Hash ( OldRoot, SiblingHash )
     OLD_ROOT => HASH_LEFT
-    $ => OLD_ROOT                   :HASH
+    $ => OLD_ROOT                   :HASH0
 
     ; Update remaining key
                                     :CLIMB_RKEY
@@ -135,3 +135,4 @@ SWS_SiblingIsRight3:
 
 SWS_Latch:
                                     :LATCH_SET              ; At this point consistency is granted: OLD_ROOT, NEW_ROOT, RKEY (complete key), VALUE_LOW, VALUE_HIGH, LEVEL
+                                    :JMP(Run)

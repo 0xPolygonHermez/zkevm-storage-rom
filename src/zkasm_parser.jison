@@ -20,7 +20,8 @@ SIBLING_RKEY            { return 'SIBLING_RKEY'; }
 RKEY_BIT                { return 'RKEY_BIT'; }
 LEVEL                   { return 'LEVEL'; }
 PC                      { return 'PC'; }
-HASH                    { return 'HASH' }
+HASH0                   { return 'HASH0' }
+HASH1                   { return 'HASH1' }
 LATCH_SET               { return 'LATCH_SET' }
 LATCH_GET               { return 'LATCH_GET' }
 CLIMB_RKEY              { return 'CLIMB_RKEY' }
@@ -242,9 +243,13 @@ op
         {
             $$ = {iJmpz: 1n, addressLabel: $3}
         }
-    | HASH
+    | HASH0
         {
-            $$ = {iHash: 1n}
+            $$ = {iHash: 1n, iHashType: 0}
+        }
+    | HASH1
+        {
+            $$ = {iHash: 1n, iHashType: 1}
         }
     | LATCH_SET
         {

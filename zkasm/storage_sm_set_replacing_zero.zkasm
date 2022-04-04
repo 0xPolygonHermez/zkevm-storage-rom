@@ -7,11 +7,11 @@ Set_ReplacingZero:
     VALUE_LOW => HASH_LEFT
     ${GetValueHigh()} => VALUE_HIGH
     VALUE_HIGH => HASH_RIGHT
-    $ => HASH_RIGHT                 :HASH
+    $ => HASH_RIGHT                 :HASH0
     RKEY => HASH_LEFT
-    $ => HASH_RIGHT                 :HASH
+    $ => HASH_RIGHT                 :HASH0
     0x1 => HASH_LEFT
-    $ => OLD_ROOT                   :HASH
+    $ => OLD_ROOT                   :HASH1
 
     ; Init LEVEL, and rotate as per key level
     0x1 => LEVEL
@@ -34,11 +34,11 @@ SRZ_SiblingIsLeft1:
     ; NewRoot = Hash( SiblingHash, OldRoot(LeafNodeHash) )
     OLD_ROOT => HASH_RIGHT
     ${GetSiblingHash()} => HASH_LEFT
-    $ => NEW_ROOT                   :HASH
+    $ => NEW_ROOT                   :HASH0
 
     ; OldRoot = Hash ( SiblingHash, 0 )
     0x0 => HASH_RIGHT
-    $ => OLD_ROOT                   :HASH
+    $ => OLD_ROOT                   :HASH0
 
     ; Update remaining key
                                     :CLIMB_RKEY
@@ -51,11 +51,11 @@ SRZ_SiblingIsRight1:
     ; NewRoot = Hash( OldRoot(LeafNodeHash), SiblingHash )
     OLD_ROOT => HASH_LEFT
     ${GetSiblingHash()} => HASH_RIGHT
-    $ => NEW_ROOT                   :HASH
+    $ => NEW_ROOT                   :HASH0
 
     ; OldRoot = Hash ( 0, SiblingHash )
     0x0 => HASH_LEFT
-    $ => OLD_ROOT                   :HASH
+    $ => OLD_ROOT                   :HASH0
 
     ; Update remaining key
                                     :CLIMB_RKEY
@@ -72,11 +72,11 @@ SRZ_SiblingIsLeft2:
     ; NewRoot = Hash ( SiblingHash, NewRoot )
     NEW_ROOT => HASH_RIGHT
     ${GetSiblingHash()} => HASH_LEFT
-    $ => NEW_ROOT                   :HASH
+    $ => NEW_ROOT                   :HASH0
 
     ; OldRoot = Hash ( SiblingHash, OldRoot )
     OLD_ROOT => HASH_RIGHT
-    $ => OLD_ROOT                   :HASH
+    $ => OLD_ROOT                   :HASH0
 
     ; Update remaining key
                                     :CLIMB_RKEY
@@ -89,11 +89,11 @@ SRZ_SiblingIsRight2:
     ; NewRoot = Hash ( NewRoot, SiblingHash )
     NEW_ROOT => HASH_LEFT
     ${GetSiblingHash()} => HASH_RIGHT
-    $ => NEW_ROOT                   :HASH
+    $ => NEW_ROOT                   :HASH0
 
     ; OldRoot = Hash ( OldRoot, SiblingHash )
     OLD_ROOT => HASH_LEFT
-    $ => OLD_ROOT                   :HASH
+    $ => OLD_ROOT                   :HASH0
 
     ; Update remaining key
                                     :CLIMB_RKEY
@@ -104,3 +104,4 @@ SRZ_SiblingIsRight2:
 
 SRZ_Latch:
                                     :LATCH_SET              ; At this point consistency is granted: OLD_ROOT, NEW_ROOT, RKEY (complete key), VALUE_LOW, VALUE_HIGH, LEVEL
+                                    :JMP(Run)
