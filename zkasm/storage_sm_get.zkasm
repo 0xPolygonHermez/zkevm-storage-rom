@@ -1,53 +1,69 @@
 Get:
+
     ${isOld0()}                     :JMPZ(Get_Latch)        ; If key was not found, go directly to the latch
     ${GetRKey()} => RKEY
 
-    ; ValueHash = Hash(VALUE_LOW, VALUE_HIGH, 0, 0, 0, 0)
+    ; ValueHash = Hash0( VALUE_LOW, VALUE_HIGH )
     ${GetValueLow()} => VALUE_LOW, HASH_LEFT
     ${GetValueHigh()} => VALUE_HIGH, HASH_RIGHT
     $ => HASH_RIGHT                 :HASH0
 
-    ; OldRoot = LeafNodeHash = Hash( Key, Hash( VALUE_LOW, VALUE_HIGH ), 1, 0, 0, 0 ) )
+    ; OldRoot = LeafNodeHash = Hash1( Key, Hash( VALUE_LOW, VALUE_HIGH ) )
     RKEY => HASH_LEFT
     $ => OLD_ROOT                   :HASH1
 
-    ; Init LEVEL, and rotate as per key level
+Get_InitLevel:
+
+    ; Init LEVEL register, and inversely rotate so that after level rotations
+    ; the position of LEVEL becomes {1,0,0,0} again
     0x1 => LEVEL
-    ${GetLevelBit(0)}               :JMPZ(Get_LevelBit1)    ; If level bit 0 is zero, then skip the next 1 inverse rotation (i.e. 3 rotations)
+
+    ; If level bit 0 is 1, then do 1 inverse rotation (i.e. 3 normal rotations)
+    ${GetLevelBit(0)}               :JMPZ(Get_LevelBit1)
                                     :ROTATE_LEVEL
                                     :ROTATE_LEVEL
                                     :ROTATE_LEVEL
 
 Get_LevelBit1:
 
-    ${GetLevelBit(1)}               :JMPZ(Get_ClimbTree)    ; If level bit 1 is zero, then skip the next 2 rotations (i.e. 2 rotations)
+    ; If level bit 1 is 1, then do 2 inverse rotations (i.e. 2 normal rotations)
+    ${GetLevelBit(1)}               :JMPZ(Get_ClimbTree)
                                     :ROTATE_LEVEL
                                     :ROTATE_LEVEL
 
 Get_ClimbTree:
 
-    ${GetTopTree()}                 :JMPZ(Get_Latch)        ; If we are at the top of the tree, then goto Get_Latch
+    ; If we are at the top of the tree, then goto Get_Latch
+    ${GetTopTree()}                 :JMPZ(Get_Latch)
 
+    ; If next key bit is zero, then the sibling hash must be at the right (sibling's key bit is 1)
     ${GetNextKeyBit()} => RKEY_BIT
     RKEY_BIT                        :JMPZ(Get_SiblingIsRight)
  
 Get_SiblingIsLeft:
 
-    ; OldRoot = Hash ( SiblingHash, OldRoot );
+    ; OldRoot = Hash0( SiblingHash, OldRoot );
     ${GetSiblingHash()} => HASH_LEFT
     OLD_ROOT => HASH_RIGHT
     $ => OLD_ROOT                   :HASH0
+
+    ; Update remaining key
                                     :ROTATE_LEVEL
                                     :CLIMB_RKEY
+
                                     :JMP(Get_ClimbTree)
 
 Get_SiblingIsRight:
-    ; OldRoot = Hash ( OldRoot, SiblingHash );
+
+    ; OldRoot = Hash0( OldRoot, SiblingHash );
     OLD_ROOT => HASH_LEFT
     ${GetSiblingHash()} => HASH_RIGHT
     $ => OLD_ROOT                   :HASH0
+
+    ; Update remaining key
                                     :ROTATE_LEVEL
                                     :CLIMB_RKEY
+
                                     :JMP(Get_ClimbTree)
 
 Get_Latch:
