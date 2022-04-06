@@ -7,16 +7,16 @@ Update:
     ${GetOldValueHigh()} => HASH_RIGHT
     $ => HASH_RIGHT                 :HASH0
 
-    ; OldRoot = LeafNodeHash = Hash1( Key, Hash( VALUE_LOW, VALUE_HIGH ) )
+    ; OldRoot = LeafNodeHash = Hash1( RKey, Hash( VALUE_LOW, VALUE_HIGH ) )
     RKEY => HASH_LEFT
     $ => OLD_ROOT                   :HASH1
 
-    ; NewValueHash = Hash0( _VALUE_LOW, OLD_VALUE_HIGH )
+    ; NewValueHash = Hash0( VALUE_LOW, VALUE_HIGH )
     ${GetValueLow()} => VALUE_LOW, HASH_LEFT
     ${GetValueHigh()} => VALUE_HIGH, HASH_RIGHT
     $ => HASH_RIGHT                 :HASH0
 
-    ; NewRoot = LeafNodeHash = Hash1( Key, Hash( VALUE_LOW, VALUE_HIGH ) )
+    ; NewRoot = LeafNodeHash = Hash1( RKey, Hash( VALUE_LOW, VALUE_HIGH ) )
     RKEY => HASH_LEFT
     $ => NEW_ROOT                   :HASH1
 

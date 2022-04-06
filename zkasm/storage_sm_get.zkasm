@@ -8,7 +8,7 @@ Get:
     ${GetValueHigh()} => VALUE_HIGH, HASH_RIGHT
     $ => HASH_RIGHT                 :HASH0
 
-    ; OldRoot = LeafNodeHash = Hash1( Key, Hash( VALUE_LOW, VALUE_HIGH ) )
+    ; OldRoot = LeafNodeHash = Hash1( RKey, Hash( VALUE_LOW, VALUE_HIGH ) )
     RKEY => HASH_LEFT
     $ => OLD_ROOT                   :HASH1
 
