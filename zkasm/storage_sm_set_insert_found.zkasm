@@ -1,5 +1,15 @@
 Set_InsertFound:
 
+    ; Root Node                                     Root Node (modified)                   * end of tree
+    ;  / \                                           / \                                   |
+    ;    Intermediate Node                              Intermediate Node (modified)       ^ climb tree
+    ;     / \                                            / \                               |
+    ;        Sibling Node (common RKEY lower bits)  --->    Intermediate Node (new)        ^ end of branch
+    ;                                                        / \                           |
+    ;                                                           Intermediate Node (new)    ^ climb branch
+    ;                                                            / \                       |
+    ;                                           (new) Sibling Node  New Value Node (new)   * start here
+
     ; We found a leaf node in the path to the key we want to insert
     ; We have to create 2 new leaf nodes (old and new value's) at the point when the keys diverge
     ; and then, climb the branch until we reach the found leaf node intersection

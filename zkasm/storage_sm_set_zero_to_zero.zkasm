@@ -1,54 +1,55 @@
-Update:
+Set_ZeroToZero:
 
     ${GetRKey()} => RKEY
 
     ; OldValueHash = Hash0( OLD_VALUE_LOW, OLD_VALUE_HIGH )
-    ${GetOldValueLow()} => HASH_LEFT
-    ${GetOldValueHigh()} => HASH_RIGHT
-    $ => HASH_RIGHT                 :HASH0
+    ;${GetOldValueLow()} => HASH_LEFT
+    ;${GetOldValueHigh()} => HASH_RIGHT
+    ;$ => HASH_RIGHT                 :HASH0
 
     ; OldRoot = LeafNodeHash = Hash1( RKey, Hash( VALUE_LOW, VALUE_HIGH ) )
-    RKEY => HASH_LEFT
-    $ => OLD_ROOT                   :HASH1
+    ;RKEY => HASH_LEFT
+    ;$ => OLD_ROOT                   :HASH1
 
     ; NewValueHash = Hash0( VALUE_LOW, VALUE_HIGH )
-    ${GetValueLow()} => VALUE_LOW, HASH_LEFT
-    ${GetValueHigh()} => VALUE_HIGH, HASH_RIGHT
-    $ => HASH_RIGHT                 :HASH0
+    ;${GetValueLow()} => VALUE_LOW, HASH_LEFT
+    ;${GetValueHigh()} => VALUE_HIGH, HASH_RIGHT
+    ;$ => HASH_RIGHT                 :HASH0
 
     ; NewRoot = LeafNodeHash = Hash1( RKey, Hash( VALUE_LOW, VALUE_HIGH ) )
-    RKEY => HASH_LEFT
-    $ => NEW_ROOT                   :HASH1
+    ;RKEY => HASH_LEFT
+    ;$ => NEW_ROOT                   :HASH1
+    0x0 => OLD_ROOT, NEW_ROOT
 
-Update_InitLevel:
+SZTZ_InitLevel:
 
     ; Init LEVEL register, and inversely rotate so that after level rotations
     ; the position of LEVEL becomes {1,0,0,0} again
     0x01 => LEVEL
 
     ; If level bit 0 is 1, then do 1 inverse rotation (i.e. 3 normal rotations)
-    ${GetLevelBit(0)}               :JMPZ(Update_LevelBit1)
+    ${GetLevelBit(0)}               :JMPZ(SZTZ_LevelBit1)
                                     :ROTATE_LEVEL
                                     :ROTATE_LEVEL
                                     :ROTATE_LEVEL
 
-Update_LevelBit1:
+SZTZ_LevelBit1:
 
     ; If level bit 1 is 1, then do 2 inverse rotations (i.e. 2 normal rotations)
-    ${GetLevelBit(1)}               :JMPZ(Update_ClimbTree)
+    ${GetLevelBit(1)}               :JMPZ(SZTZ_ClimbTree)
                                     :ROTATE_LEVEL
                                     :ROTATE_LEVEL
 
-Update_ClimbTree:
+SZTZ_ClimbTree:
 
     ; If we are at the top of the tree, then goto Get_Latch
-    ${GetTopTree()}                 :JMPZ(Update_Latch)
+    ${GetTopTree()}                 :JMPZ(SZTZ_Latch)
 
     ; If next key bit is zero, then the sibling hash must be at the right (sibling's key bit is 1)
     ${GetNextKeyBit()} => RKEY_BIT
-    RKEY_BIT                        :JMPZ(Update_SiblingIsRight)
+    RKEY_BIT                        :JMPZ(SZTZ_SiblingIsRight)
 
-Update_SiblingIsLeft:
+SZTZ_SiblingIsLeft:
 
     ; NewRoot = Hash0( SiblingHash, NewRoot )
     ${GetSiblingHash()} => HASH_LEFT
@@ -63,9 +64,9 @@ Update_SiblingIsLeft:
                                     :ROTATE_LEVEL
                                     :CLIMB_RKEY
                                     
-                                    :JMP(Update_ClimbTree)
+                                    :JMP(SZTZ_ClimbTree)
 
-Update_SiblingIsRight:
+SZTZ_SiblingIsRight:
 
     ; NewRoot = Hash0( NewRoot, SiblingHash )
     NEW_ROOT => HASH_LEFT
@@ -76,13 +77,13 @@ Update_SiblingIsRight:
     OLD_ROOT => HASH_LEFT                       ; Sibling hash is already in HASH_RIGHT, since previous hash
     $ => OLD_ROOT                   :HASH0
 
-    ; Update remaining key
+    ; SZTZ remaining key
                                     :ROTATE_LEVEL
                                     :CLIMB_RKEY
 
-                                    :JMP(Update_ClimbTree)
+                                    :JMP(SZTZ_ClimbTree)
 
 
-Update_Latch:
+SZTZ_Latch:
                                     :LATCH_SET              ; At this point consistency is granted: OLD_ROOT, NEW_ROOT, RKEY (complete key), VALUE_LOW, VALUE_HIGH, LEVEL
                                     :JMP(Run)

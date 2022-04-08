@@ -7,23 +7,39 @@ Run_IsGetZero:
                             :JMP(GetZero)
 Run_IsUpdate:
     ${isUpdate()}           :JMPZ(Run_IsInsertFound)
-                            :JMP(Update)
+                            :JMP(Set_Update)
 Run_IsInsertFound:
-    ${isInsertFound()}      :JMPZ(Run_IsSetReplacingZero)
+    ${isInsertFound()}      :JMPZ(Run_IsInsertNotFound)
                             :JMP(Set_InsertFound)
+Run_IsInsertNotFound:
+    ${isInsertNotFound()}   :JMPZ(Run_IsSetReplacingZero)
+                            :JMP(Set_InsertNotFound)
 Run_IsSetReplacingZero:
     ${isSetReplacingZero()} :JMPZ(Run_IsSetWithSibling)
                             :JMP(Set_ReplacingZero)
 Run_IsSetWithSibling:
-    ${isSetWithSibling()}   :JMPZ(notEndPol)
+    ${isSetWithSibling()}   :JMPZ(Run_IsSetDeleteLast)
                             :JMP(Set_WithSibling)
+Run_IsSetDeleteLast:
+    ${isDeleteLast()}       :JMPZ(Run_IsSetDeleteNotFound)
+                            :JMP(Set_DeleteLast)
+Run_IsSetDeleteNotFound:
+    ${isDeleteNotFound()}   :JMPZ(Run_IsSetZeroToZero)
+                            :JMP(Set_DeleteNotFound)
+Run_IsSetZeroToZero:
+    ${isZeroToZero()}       :JMPZ(notEndPol)
+                            :JMP(Set_ZeroToZero)
 
 INCLUDE "storage_sm_get.zkasm"
 INCLUDE "storage_sm_get_zero.zkasm"
-INCLUDE "storage_sm_update.zkasm"
+INCLUDE "storage_sm_set_update.zkasm"
 INCLUDE "storage_sm_set_insert_found.zkasm"
+INCLUDE "storage_sm_set_insert_not_found.zkasm"
 INCLUDE "storage_sm_set_replacing_zero.zkasm"
 INCLUDE "storage_sm_set_with_sibling.zkasm"
+INCLUDE "storage_sm_set_delete_last.zkasm"
+INCLUDE "storage_sm_set_delete_not_found.zkasm"
+INCLUDE "storage_sm_set_zero_to_zero.zkasm"
 
 ; Rest of instructions: selPC=1, JMPZ 0
 ; Executor = specific itinerary accross the rom
