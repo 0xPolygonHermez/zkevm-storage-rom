@@ -68,7 +68,6 @@ SINF_SiblingIsLeft3:
     ; Update remaining key
                                     :ROTATE_LEVEL
                                     :CLIMB_RKEY
-                                    :CLIMB_SIBLING_RKEY
 
                                     :JMP(SINF_ClimbTree)
 
@@ -86,7 +85,6 @@ SINF_SiblingIsRight3:
     ; Update remaining key
                                     :ROTATE_LEVEL
                                     :CLIMB_RKEY
-                                    :CLIMB_SIBLING_RKEY
 
                                     :JMP(SINF_ClimbTree)
 
