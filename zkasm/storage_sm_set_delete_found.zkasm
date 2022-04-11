@@ -1,14 +1,14 @@
-Set_InsertFound:
+Set_DeleteFound:
 
-    ; Root Node                                     Root Node (modified)                   * end of tree
-    ;  / \                                           / \                                   |
-    ;    Intermediate Node                              Intermediate Node (modified)       ^ climb tree
-    ;     / \                                            / \                               |
-    ;        Sibling Node (common RKEY lower bits)  --->    Intermediate Node (new)        ^ end of branch
-    ;                                                        / \                           |
-    ;                                                           Intermediate Node (new)    ^ climb branch
-    ;                                                            / \                       |
-    ;                                           (new) Sibling Node  New Value Node (new)   * start here
+    ; Root Node                               Root Node (modified)                          * end of tree
+    ;  / \                                     / \                                          |
+    ;     Intermediate Node                       Intermediate Node (modified)              ^ climb tree
+    ;      / \                                    / \                                       |
+    ;         Intermediate Node        -->           Sibling Node (common RKEY lower bits)  ^ end of branch
+    ;          / \                                                                          |
+    ;             Intermediate Node                                                         ^ climb branch
+    ;              / \                                                                      |
+    ;   Sibling Node  Old Value Node (to delete)                                            * start here
 
     ; We found a leaf node in the path to the key we want to insert
     ; We have to create 2 new leaf nodes (old and new value's) at the point when the keys diverge
@@ -20,119 +20,119 @@ Set_InsertFound:
     ; OldValueHash = Hash0( SIBLING_VALUE_LOW, SIBLING_VALUE_HIGH )
     ${GetOldValueLow()} => HASH_LEFT
     ${GetOldValueHigh()} => HASH_RIGHT
-    $ => SIBLING_VALUE_HASH, HASH_RIGHT :HASH0
+    $ => HASH_RIGHT :HASH0
 
     ; OldRoot = LeafNodeHash = Hash1( SIBLING_RKEY, Hash(0 SIBLING_VALUE_LOW, SIBLING_VALUE_HIGH ) )
-    ${GetSiblingRKey()} => SIBLING_RKEY
-    SIBLING_RKEY => HASH_LEFT
+    ${GetRKey()} => RKEY
+    RKEY => HASH_LEFT
     $ => OLD_ROOT                   :HASH1
     
     ; NewValueHash = Hash0( VALUE_LOW, VALUE_HIGH )
-    ${GetValueLow()} => VALUE_LOW, HASH_LEFT
-    ${GetValueHigh()} => VALUE_HIGH, HASH_RIGHT
-    $ => HASH_RIGHT                 :HASH0
+    ${GetSiblingValueLow()} => VALUE_LOW, HASH_LEFT
+    ${GetSiblingValueHigh()} => VALUE_HIGH, HASH_RIGHT
+    $ => SIBLING_VALUE_HASH, HASH_RIGHT :HASH0
 
     ; NewRoot = LeafNodeHash = Hash1( RKEY, Hash0( VALUE_LOW, VALUE_HIGH ) )
-    ${GetRKey()} => RKEY
-    RKEY => HASH_LEFT
+    ${GetSiblingRKey()} => SIBLING_RKEY
+    SIBLING_RKEY => HASH_LEFT
     $ => NEW_ROOT                   :HASH1
 
-SIF_InitLevel:
+SDF_InitLevel:
 
     ; Init LEVEL register to {1,0,0,0}, and inversely rotate it level%4 times,
     ; so that after level rotations the position of LEVEL becomes {1,0,0,0} again
     0x01 => LEVEL
 
     ; If level bit 0 is 1, then do 1 inverse rotation (i.e. 3 normal rotations)
-    ${GetLevelBit(0)}               :JMPZ(SIF_LevelBit1)
+    ${GetLevelBit(0)}               :JMPZ(SDF_LevelBit1)
                                     :ROTATE_LEVEL
                                     :ROTATE_LEVEL
                                     :ROTATE_LEVEL
 
-SIF_LevelBit1:
+SDF_LevelBit1:
 
     ; If level bit 1 is 1, then do 2 inverse rotations (i.e. 2 normal rotations)
-    ${GetLevelBit(1)}               :JMPZ(SIF_FirstIntermediateNode)
+    ${GetLevelBit(1)}               :JMPZ(SDF_FirstIntermediateNode)
                                     :ROTATE_LEVEL
                                     :ROTATE_LEVEL
 
     ; Create the first intermediate node that joins the old and the new value's leaf nodes
 
-SIF_FirstIntermediateNode:
+SDF_FirstIntermediateNode:
 
     ${GetNextKeyBit()} => RKEY_BIT
-    RKEY_BIT                        :JMPZ(SIF_SiblingIsRight1) ; If next key bit is zero, then sibling is right (sibling's next key bit is 1)
+    RKEY_BIT                        :JMPZ(SDF_SiblingIsRight1) ; If next key bit is zero, then sibling is right (sibling's next key bit is 1)
 
-SIF_SiblingIsLeft1:
+SDF_SiblingIsLeft1:
 
-    ; NewRoot = Hash0( SiblingHash, LeafNodeHash )
-    OLD_ROOT => HASH_LEFT
-    NEW_ROOT => HASH_RIGHT
-    $ => NEW_ROOT                   :HASH0
+    ; OldRoot = Hash0( SiblingHash, LeafNodeHash )
+    NEW_ROOT => HASH_LEFT
+    OLD_ROOT => HASH_RIGHT
+    $ => OLD_ROOT                   :HASH0
 
                                     :ROTATE_LEVEL
                                     :CLIMB_RKEY
                                     :CLIMB_SIBLING_RKEY
 
-                                    :JMP(SIF_ClimbBranch)
+                                    :JMP(SDF_ClimbBranch)
 
-SIF_SiblingIsRight1:
+SDF_SiblingIsRight1:
 
-    ; NewRoot = Hash0( LeafNodeHash, SiblingHash )
-    NEW_ROOT => HASH_LEFT
-    OLD_ROOT => HASH_RIGHT
-    $ => NEW_ROOT                   :HASH0
+    ; OldRoot = Hash0( LeafNodeHash, SiblingHash )
+    OLD_ROOT => HASH_LEFT
+    NEW_ROOT => HASH_RIGHT
+    $ => OLD_ROOT                   :HASH0
     
                                     :ROTATE_LEVEL
                                     :CLIMB_RKEY
                                     :CLIMB_SIBLING_RKEY
 
-SIF_ClimbBranch:
+SDF_ClimbBranch:
 
-    ${GetTopOfBranch()}             :JMPZ(SIF_StartOldRoot) ; If we are at the top of the branch, then go to SIF_StartOldRoot
+    ${GetTopOfBranch()}             :JMPZ(SDF_StartNewRoot) ; If we are at the top of the branch, then go to SDF_StartNewRoot
 
     ${GetNextKeyBit()} => RKEY_BIT
-    RKEY_BIT                        :JMPZ(SIF_SiblingIsRight2)
+    RKEY_BIT                        :JMPZ(SDF_SiblingIsRight2)
 
-SIF_SiblingIsLeft2:
+SDF_SiblingIsLeft2:
 
     ; NewRoot = Hash0( 0, NewRoot )
     0x0 => HASH_LEFT
-    NEW_ROOT => HASH_RIGHT
-    $ => NEW_ROOT                   :HASH0
+    OLD_ROOT => HASH_RIGHT
+    $ => OLD_ROOT                   :HASH0
 
                                     :ROTATE_LEVEL
                                     :CLIMB_RKEY
                                     :CLIMB_SIBLING_RKEY
 
-                                    :JMP(SIF_ClimbBranch)
+                                    :JMP(SDF_ClimbBranch)
 
-SIF_SiblingIsRight2:
+SDF_SiblingIsRight2:
 
     ; NewRoot = Hash0( NewRoot, 0 )
-    NEW_ROOT => HASH_LEFT
+    OLD_ROOT => HASH_LEFT
     0x0 => HASH_RIGHT
-    $ => NEW_ROOT                   :HASH0
+    $ => OLD_ROOT                   :HASH0
 
                                     :ROTATE_LEVEL
                                     :CLIMB_RKEY
                                     :CLIMB_SIBLING_RKEY
 
-                                    :JMP(SIF_ClimbBranch)
+                                    :JMP(SDF_ClimbBranch)
 
-SIF_StartOldRoot:
-    ; OldRoot = Hash1( SIBLING_RKEY, SIBLING_VALUE_HASH );
+SDF_StartNewRoot:
+    ; NewRoot = Hash1( SIBLING_RKEY, SIBLING_VALUE_HASH );
     SIBLING_RKEY => HASH_LEFT
     SIBLING_VALUE_HASH => HASH_RIGHT
-    $ => OLD_ROOT                   :HASH1
+    $ => NEW_ROOT                   :HASH1
 
-SIF_ClimbTree:
-    ${GetTopTree()}               :JMPZ(SIF_Latch)        ; If we are at the top of the tree, then go to SIF_Latch
+SDF_ClimbTree:
+    ${GetTopTree()}               :JMPZ(SDF_Latch)        ; If we are at the top of the tree, then go to SDF_Latch
 
     ${GetNextKeyBit()} => RKEY_BIT
-    RKEY_BIT                        :JMPZ(SIF_SiblingIsRight3)
+    RKEY_BIT                        :JMPZ(SDF_SiblingIsRight3)
 
-SIF_SiblingIsLeft3:
+SDF_SiblingIsLeft3:
 
     ; NewRoot = Hash ( SiblingHash, NewRoot )
     NEW_ROOT => HASH_RIGHT
@@ -148,9 +148,9 @@ SIF_SiblingIsLeft3:
                                     :CLIMB_RKEY
                                     :CLIMB_SIBLING_RKEY
 
-                                    :JMP(SIF_ClimbTree)
+                                    :JMP(SDF_ClimbTree)
 
-SIF_SiblingIsRight3:
+SDF_SiblingIsRight3:
 
     ; NewRoot = Hash ( NewRoot, SiblingHash )
     NEW_ROOT => HASH_LEFT
@@ -166,8 +166,8 @@ SIF_SiblingIsRight3:
                                     :CLIMB_RKEY
                                     :CLIMB_SIBLING_RKEY
 
-                                    :JMP(SIF_ClimbTree)
+                                    :JMP(SDF_ClimbTree)
 
-SIF_Latch:
+SDF_Latch:
                                     :LATCH_SET              ; At this point consistency is granted: OLD_ROOT, NEW_ROOT, RKEY (complete key), VALUE_LOW, VALUE_HIGH, LEVEL
                                     :JMP(Run)

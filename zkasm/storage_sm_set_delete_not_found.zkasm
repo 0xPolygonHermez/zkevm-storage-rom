@@ -24,8 +24,8 @@ Set_DeleteNotFound:
 
 SDNF_InitLevel:
 
-    ; Init LEVEL register, and inversely rotate so that after level rotations
-    ; the position of LEVEL becomes {1,0,0,0} again
+    ; Init LEVEL register to {1,0,0,0}, and inversely rotate it level%4 times,
+    ; so that after level rotations the position of LEVEL becomes {1,0,0,0} again
     0x01 => LEVEL
 
     ; If level bit 0 is 1, then do 1 inverse rotation (i.e. 3 normal rotations)

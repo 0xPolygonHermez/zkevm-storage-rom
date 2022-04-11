@@ -1,31 +1,22 @@
 Set_ZeroToZero:
 
+    ; Since we are setting a zero in a key that already had a zero,
+    ; we initialize roots at zero and climb the tree up to the top
+
+    ; Root Node             Root Node (same as before)              * end of tree
+    ;  / \                   / \                                    |
+    ;    Intermediate Node      Intermediate Node (same as before)  ^ climb tree
+    ;     / \                     / \                               |
+    ;        0               --->    0 (same as before)             * start here
+
     ${GetRKey()} => RKEY
-
-    ; OldValueHash = Hash0( OLD_VALUE_LOW, OLD_VALUE_HIGH )
-    ;${GetOldValueLow()} => HASH_LEFT
-    ;${GetOldValueHigh()} => HASH_RIGHT
-    ;$ => HASH_RIGHT                 :HASH0
-
-    ; OldRoot = LeafNodeHash = Hash1( RKey, Hash( VALUE_LOW, VALUE_HIGH ) )
-    ;RKEY => HASH_LEFT
-    ;$ => OLD_ROOT                   :HASH1
-
-    ; NewValueHash = Hash0( VALUE_LOW, VALUE_HIGH )
-    ;${GetValueLow()} => VALUE_LOW, HASH_LEFT
-    ;${GetValueHigh()} => VALUE_HIGH, HASH_RIGHT
-    ;$ => HASH_RIGHT                 :HASH0
-
-    ; NewRoot = LeafNodeHash = Hash1( RKey, Hash( VALUE_LOW, VALUE_HIGH ) )
-    ;RKEY => HASH_LEFT
-    ;$ => NEW_ROOT                   :HASH1
     0x0 => OLD_ROOT, NEW_ROOT
 
 SZTZ_InitLevel:
 
-    ; Init LEVEL register, and inversely rotate so that after level rotations
-    ; the position of LEVEL becomes {1,0,0,0} again
-    0x01 => LEVEL
+    ; Init LEVEL register to {1,0,0,0}, and inversely rotate it level%4 times,
+    ; so that after level rotations the position of LEVEL becomes {1,0,0,0} again
+    0x1 => LEVEL
 
     ; If level bit 0 is 1, then do 1 inverse rotation (i.e. 3 normal rotations)
     ${GetLevelBit(0)}               :JMPZ(SZTZ_LevelBit1)
@@ -82,7 +73,6 @@ SZTZ_SiblingIsRight:
                                     :CLIMB_RKEY
 
                                     :JMP(SZTZ_ClimbTree)
-
 
 SZTZ_Latch:
                                     :LATCH_SET              ; At this point consistency is granted: OLD_ROOT, NEW_ROOT, RKEY (complete key), VALUE_LOW, VALUE_HIGH, LEVEL
