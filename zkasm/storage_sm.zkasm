@@ -1,10 +1,7 @@
 Run:
 
-    ${isGet()}              :JMPZ(Run_IsGetZero)
+    ${isGet()}              :JMPZ(Run_IsSetUpdate)
                             :JMP(Get)
-Run_IsGetZero:
-    ${isGetZero()}          :JMPZ(Run_IsSetUpdate)
-                            :JMP(GetZero)
 Run_IsSetUpdate:
     ${isSetUpdate()}        :JMPZ(Run_IsSetInsertFound)
                             :JMP(Set_Update)
@@ -28,7 +25,6 @@ Run_IsSetZeroToZero:
                             :JMP(Set_ZeroToZero)
 
 INCLUDE "storage_sm_get.zkasm"
-INCLUDE "storage_sm_get_zero.zkasm"
 INCLUDE "storage_sm_set_update.zkasm"
 INCLUDE "storage_sm_set_insert_found.zkasm"
 INCLUDE "storage_sm_set_insert_not_found.zkasm"

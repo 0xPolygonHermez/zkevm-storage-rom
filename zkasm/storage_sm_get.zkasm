@@ -1,7 +1,15 @@
 Get:
 
-    ${isOld0()}                     :JMPZ(Get_Latch)        ; If key was not found, go directly to the latch
     ${GetRKey()} => RKEY
+
+    ${GetValueLow()} => VALUE_LOW    :JMPZ(Get_ValueLowIsZero)
+    ${GetValueHigh()} => VALUE_HIGH  :JMP(Get_ValueIsNotZero)
+
+Get_ValueLowIsZero:
+   
+    ${GetValueHigh()} => VALUE_HIGH  :JMPZ(Get_ValueIsZero)
+
+Get_ValueIsNotZero:
 
     ; ValueHash = Hash0( VALUE_LOW, VALUE_HIGH )
     ${GetValueLow()} => VALUE_LOW, HASH_LEFT
@@ -11,6 +19,13 @@ Get:
     ; OldRoot = LeafNodeHash = Hash1( RKey, Hash( VALUE_LOW, VALUE_HIGH ) )
     RKEY => HASH_LEFT
     $ => OLD_ROOT                   :HASH1
+
+                                    :JMP(Get_InitLevel)
+
+Get_ValueIsZero:
+
+    ; No need to calculate the hash; intermediate nodes will use simply 0
+    0x0 => OLD_ROOT
 
 Get_InitLevel:
 

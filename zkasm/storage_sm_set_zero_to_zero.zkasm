@@ -3,14 +3,26 @@ Set_ZeroToZero:
     ; Since we are setting a zero in a key that already had a zero,
     ; we initialize roots at zero and climb the tree up to the top
 
-    ; Root Node             Root Node (same as before)              * end of tree
-    ;  / \                   / \                                    |
-    ;    Intermediate Node      Intermediate Node (same as before)  ^ climb tree
-    ;     / \                     / \                               |
-    ;        0               --->    0 (same as before)             * start here
+    ;  Root Node             Root Node (same as before)              * end of tree
+    ;   / \                   / \                                    |
+    ;     Intermediate Node      Intermediate Node (same as before)  ^ climb tree
+    ;      / \                     / \                               |
+    ; Sibling 0        ---> Sibling   0 (same as before)             * start here
 
     ${GetRKey()} => RKEY
-    0x0 => OLD_ROOT, NEW_ROOT
+
+    ; OldValueHash = Hash0( SIBLING_VALUE_LOW, SIBLING_VALUE_HIGH )
+    ${GetSiblingValueLow()} => VALUE_LOW, HASH_LEFT
+    ${GetSiblingValueHigh()} => VALUE_HIGH, HASH_RIGHT
+    $ => SIBLING_VALUE_HASH, HASH_RIGHT :HASH0
+
+    ; OldRoot = LeafNodeHash = Hash1( RKEY, Hash0( SIBLING_VALUE_LOW, SIBLING_VALUE_HIGH ) )
+    ${GetSiblingRKey()} => SIBLING_RKEY
+    SIBLING_RKEY => HASH_LEFT
+    $ => OLD_ROOT                   :HASH1
+
+    ; NewRoot = OldRoot
+    OLD_ROOT => NEW_ROOT
 
 SZTZ_InitLevel:
 

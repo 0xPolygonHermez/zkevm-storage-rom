@@ -1,6 +1,0 @@
-GetZero:
-
-    0x0 => VALUE_LOW
-    0x0 => VALUE_HIGH
-                                    :LATCH_GET              ; At this point consistency is granted: OLD_ROOT, RKEY (complete key), VALUE_LOW, VALUE_HIGH, LEVEL
-                                    :JMP(Run)

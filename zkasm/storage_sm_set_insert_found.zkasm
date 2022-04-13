@@ -18,8 +18,8 @@ Set_InsertFound:
     ; Create the 2 new leaf nodes: for the old found value, and for the new value
 
     ; OldValueHash = Hash0( SIBLING_VALUE_LOW, SIBLING_VALUE_HIGH )
-    ${GetOldValueLow()} => HASH_LEFT
-    ${GetOldValueHigh()} => HASH_RIGHT
+    ${GetSiblingValueLow()} => HASH_LEFT
+    ${GetSiblingValueHigh()} => HASH_RIGHT
     $ => SIBLING_VALUE_HASH, HASH_RIGHT :HASH0
 
     ; OldRoot = LeafNodeHash = Hash1( SIBLING_RKEY, Hash(0 SIBLING_VALUE_LOW, SIBLING_VALUE_HIGH ) )
