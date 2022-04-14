@@ -1,5 +1,13 @@
 Set_DeleteLast:
 
+    ; Root Node (non-zero) ---> Root Node (zero) # end of tree
+    ;  /\
+    ; (No more nodes)
+
+    ; We are deleting the last (and only) node of the tree, i.e. the root node
+    ; The new root will be zero, since the new tree will be empty
+
+    ; Get the remaining key
     ${GetRKey()} => RKEY
 
     ; OldValueHash = Hash0( OLD_VALUE_LOW, OLD_VALUE_HIGH )
@@ -11,6 +19,7 @@ Set_DeleteLast:
     RKEY => HASH_LEFT
     $ => OLD_ROOT                   :HASH1
 
+    ; In the new tree, both value and root are zero
     0x0 => VALUE_LOW, VALUE_HIGH, NEW_ROOT
 
 SDL_InitLevel:
@@ -33,6 +42,9 @@ SDL_LevelBit1:
                                     :ROTATE_LEVEL
 
 SDL_LatchSet:
-    
-                                    :LATCH_SET              ; At this point consistency is granted: OLD_ROOT, RKEY (complete key), VALUE_LOW, VALUE_HIGH, LEVEL
+
+    ; At this point consistency is granted: OLD_ROOT, RKEY (complete key), VALUE_LOW, VALUE_HIGH, LEVEL
+                                    :LATCH_SET
+
+    ; Return to the main loop
                                     :JMP(Run)

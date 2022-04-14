@@ -1,10 +1,10 @@
 Set_DeleteNotFound:
 
-    ; Root Node             Root Node (modified)                   * end of tree
+    ; Root Node             Root Node (modified)                   # end of tree
     ;  / \                   / \                                   |
     ;    Intermediate Node      Intermediate Node (modified)       ^ climb tree
-    ;     /                      / \                               |
-    ;                       --->    Old Value Node (delete)        * start here
+    ;     /\                     / \                               |
+    ;       Old Value Node  --->    Old Value Node (delete)        * start here
 
 
     ; We have found a leaf node to delete, but the DelentNotFound name is given since this is the symmetric
@@ -48,10 +48,11 @@ SDNF_StartNewRoot:
     0x0 => NEW_ROOT, VALUE_LOW, VALUE_HIGH
 
 SDNF_ClimbTree:
-    ${GetTopTree()}               :JMPZ(SDNF_Latch)        ; If we are at the top of the tree, then go to SDNF_Latch
 
-    ${GetNextKeyBit()} => RKEY_BIT
-    RKEY_BIT                        :JMPZ(SDNF_SiblingIsRight3)
+    ; If we are at the top of the tree, then go to SDNF_Latch
+    ${GetTopTree()}               :JMPZ(SDNF_Latch)
+
+    ${GetNextKeyBit()} => RKEY_BIT  :JMPZ(SDNF_SiblingIsRight3)
 
 SDNF_SiblingIsLeft3:
 
@@ -67,7 +68,6 @@ SDNF_SiblingIsLeft3:
     ; Update remaining key
                                     :ROTATE_LEVEL
                                     :CLIMB_RKEY
-                                    ;:CLIMB_SIBLING_RKEY
 
                                     :JMP(SDNF_ClimbTree)
 
@@ -85,10 +85,13 @@ SDNF_SiblingIsRight3:
     ; Update remaining key
                                     :ROTATE_LEVEL
                                     :CLIMB_RKEY
-                                    ;:CLIMB_SIBLING_RKEY
 
                                     :JMP(SDNF_ClimbTree)
 
 SDNF_Latch:
-                                    :LATCH_SET              ; At this point consistency is granted: OLD_ROOT, NEW_ROOT, RKEY (complete key), VALUE_LOW, VALUE_HIGH, LEVEL
+
+    ; At this point consistency is granted: OLD_ROOT, NEW_ROOT, RKEY (complete key), VALUE_LOW, VALUE_HIGH, LEVEL
+                                    :LATCH_SET
+
+    ; Return to the main loop
                                     :JMP(Run)

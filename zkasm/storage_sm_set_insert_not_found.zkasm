@@ -1,6 +1,6 @@
 Set_InsertNotFound:
 
-    ; Root Node             Root Node (modified)                   * end of tree
+    ; Root Node             Root Node (modified)                   # end of tree
     ;  / \                   / \                                   |
     ;    Intermediate Node      Intermediate Node (modified)       ^ climb tree
     ;     /                      / \                               |
@@ -19,8 +19,7 @@ Set_InsertNotFound:
     $ => HASH_RIGHT                 :HASH0
 
     ; NewRoot = LeafNodeHash = Hash1( RKEY, Hash0( VALUE_LOW, VALUE_HIGH ) )
-    ${GetRKey()} => RKEY
-    RKEY => HASH_LEFT
+    ${GetRKey()} => RKEY, HASH_LEFT
     $ => NEW_ROOT                   :HASH1
 
 SINF_InitLevel:
@@ -49,10 +48,12 @@ SINF_StartOldRoot:
     0x0 => OLD_ROOT
 
 SINF_ClimbTree:
-    ${GetTopTree()}               :JMPZ(SINF_Latch)        ; If we are at the top of the tree, then go to SINF_Latch
 
-    ${GetNextKeyBit()} => RKEY_BIT
-    RKEY_BIT                        :JMPZ(SINF_SiblingIsRight3)
+    ; If we are at the top of the tree, then go to SINF_Latch
+    ${GetTopTree()}               :JMPZ(SINF_Latch)
+
+    ; If next key bit is zero, then the sibling hash must be at the right (sibling's key bit is 1)
+    ${GetNextKeyBit()} => RKEY_BIT  :JMPZ(SINF_SiblingIsRight3)
 
 SINF_SiblingIsLeft3:
 
@@ -89,5 +90,9 @@ SINF_SiblingIsRight3:
                                     :JMP(SINF_ClimbTree)
 
 SINF_Latch:
-                                    :LATCH_SET              ; At this point consistency is granted: OLD_ROOT, NEW_ROOT, RKEY (complete key), VALUE_LOW, VALUE_HIGH, LEVEL
+
+    ; At this point consistency is granted: OLD_ROOT, NEW_ROOT, RKEY (complete key), VALUE_LOW, VALUE_HIGH, LEVEL
+                                    :LATCH_SET
+
+    ; Return to the main loop
                                     :JMP(Run)

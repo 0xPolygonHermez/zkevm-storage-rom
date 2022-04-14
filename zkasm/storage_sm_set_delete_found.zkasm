@@ -1,6 +1,6 @@
 Set_DeleteFound:
 
-    ; Root Node                               Root Node (modified)                          * end of tree
+    ; Root Node                               Root Node (modified)                          # end of tree
     ;  / \                                     / \                                          |
     ;     Intermediate Node                       Intermediate Node (modified)              ^ climb tree
     ;      / \                                    / \                                       |
@@ -60,8 +60,8 @@ SDF_LevelBit1:
 
 SDF_FirstIntermediateNode:
 
-    ${GetNextKeyBit()} => RKEY_BIT
-    RKEY_BIT                        :JMPZ(SDF_SiblingIsRight1) ; If next key bit is zero, then sibling is right (sibling's next key bit is 1)
+    ; If next key bit is zero, then sibling is right (sibling's next key bit is 1)
+    ${GetNextKeyBit()} => RKEY_BIT  :JMPZ(SDF_SiblingIsRight1)
 
 SDF_SiblingIsLeft1:
 
@@ -83,16 +83,18 @@ SDF_SiblingIsRight1:
     NEW_ROOT => HASH_RIGHT
     $ => OLD_ROOT                   :HASH0
     
+    ; Update remaining keys
                                     :ROTATE_LEVEL
                                     :CLIMB_RKEY
                                     :CLIMB_SIBLING_RKEY
 
 SDF_ClimbBranch:
 
-    ${GetTopOfBranch()}             :JMPZ(SDF_StartNewRoot) ; If we are at the top of the branch, then go to SDF_StartNewRoot
+    ; If we are at the top of the branch, then go to SDF_StartNewRoot
+    ${GetTopOfBranch()}             :JMPZ(SDF_StartNewRoot)
 
-    ${GetNextKeyBit()} => RKEY_BIT
-    RKEY_BIT                        :JMPZ(SDF_SiblingIsRight2)
+    ; If next key bit is zero, then sibling is right (sibling's next key bit is 1)
+    ${GetNextKeyBit()} => RKEY_BIT  :JMPZ(SDF_SiblingIsRight2)
 
 SDF_SiblingIsLeft2:
 
@@ -101,6 +103,7 @@ SDF_SiblingIsLeft2:
     OLD_ROOT => HASH_RIGHT
     $ => OLD_ROOT                   :HASH0
 
+    ; Update remaining keys
                                     :ROTATE_LEVEL
                                     :CLIMB_RKEY
                                     :CLIMB_SIBLING_RKEY
@@ -127,10 +130,12 @@ SDF_StartNewRoot:
     $ => NEW_ROOT                   :HASH1
 
 SDF_ClimbTree:
-    ${GetTopTree()}               :JMPZ(SDF_Latch)        ; If we are at the top of the tree, then go to SDF_Latch
 
-    ${GetNextKeyBit()} => RKEY_BIT
-    RKEY_BIT                        :JMPZ(SDF_SiblingIsRight3)
+    ; If we are at the top of the tree, then go to SDF_Latch
+    ${GetTopTree()}                 :JMPZ(SDF_Latch)
+
+    ; If next key bit is zero, then sibling is right (sibling's next key bit is 1)
+    ${GetNextKeyBit()} => RKEY_BIT  :JMPZ(SDF_SiblingIsRight3)
 
 SDF_SiblingIsLeft3:
 
@@ -143,7 +148,7 @@ SDF_SiblingIsLeft3:
     OLD_ROOT => HASH_RIGHT
     $ => OLD_ROOT                   :HASH0
 
-    ; Update remaining key
+    ; Update remaining keys
                                     :ROTATE_LEVEL
                                     :CLIMB_RKEY
                                     :CLIMB_SIBLING_RKEY
@@ -161,7 +166,7 @@ SDF_SiblingIsRight3:
     OLD_ROOT => HASH_LEFT
     $ => OLD_ROOT                   :HASH0
 
-    ; Update remaining key
+    ; Update remaining keys
                                     :ROTATE_LEVEL
                                     :CLIMB_RKEY
                                     :CLIMB_SIBLING_RKEY
@@ -169,5 +174,9 @@ SDF_SiblingIsRight3:
                                     :JMP(SDF_ClimbTree)
 
 SDF_Latch:
-                                    :LATCH_SET              ; At this point consistency is granted: OLD_ROOT, NEW_ROOT, RKEY (complete key), VALUE_LOW, VALUE_HIGH, LEVEL
+
+    ; At this point consistency is granted: OLD_ROOT, NEW_ROOT, RKEY (complete key), VALUE_LOW, VALUE_HIGH, LEVEL
+                                    :LATCH_SET
+
+    ; Return to the main loop
                                     :JMP(Run)

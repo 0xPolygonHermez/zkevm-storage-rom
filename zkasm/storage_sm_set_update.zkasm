@@ -1,5 +1,15 @@
 Set_Update:
 
+    ; Root Node              Root Node (modified)                   # end of tree
+    ;  / \                    / \                                   |
+    ;    Intermediate Node       Intermediate Node (modified)       ^ climb tree
+    ;     /\                      / \                               |
+    ;       Old Value Node  --->     New Value Node (modified)      * start here
+
+    ; We have found an existing key and old value, so we just have to modify the 
+    ; value, the node hash, and the hashes of the nodes in the way to the top of the tree
+    ; The topology of the tree (nodes) does not change, only their hashes
+
     ${GetRKey()} => RKEY
 
     ; OldValueHash = Hash0( OLD_VALUE_LOW, OLD_VALUE_HIGH )
@@ -45,8 +55,7 @@ SU_ClimbTree:
     ${GetTopTree()}                 :JMPZ(SU_Latch)
 
     ; If next key bit is zero, then the sibling hash must be at the right (sibling's key bit is 1)
-    ${GetNextKeyBit()} => RKEY_BIT
-    RKEY_BIT                        :JMPZ(SU_SiblingIsRight)
+    ${GetNextKeyBit()} => RKEY_BIT  :JMPZ(SU_SiblingIsRight)
 
 SU_SiblingIsLeft:
 
@@ -76,13 +85,16 @@ SU_SiblingIsRight:
     OLD_ROOT => HASH_LEFT                       ; Sibling hash is already in HASH_RIGHT, since previous hash
     $ => OLD_ROOT                   :HASH0
 
-    ; SU remaining key
+    ; Update remaining key
                                     :ROTATE_LEVEL
                                     :CLIMB_RKEY
 
                                     :JMP(SU_ClimbTree)
 
-
 SU_Latch:
-                                    :LATCH_SET              ; At this point consistency is granted: OLD_ROOT, NEW_ROOT, RKEY (complete key), VALUE_LOW, VALUE_HIGH, LEVEL
+
+    ; At this point consistency is granted: OLD_ROOT, NEW_ROOT, RKEY (complete key), VALUE_LOW, VALUE_HIGH, LEVEL
+                                    :LATCH_SET
+
+    ; Return to the main loop
                                     :JMP(Run)

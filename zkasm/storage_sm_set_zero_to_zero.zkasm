@@ -3,7 +3,7 @@ Set_ZeroToZero:
     ; Since we are setting a zero in a key that already had a zero,
     ; we initialize roots at zero and climb the tree up to the top
 
-    ;  Root Node             Root Node (same as before)              * end of tree
+    ;  Root Node             Root Node (same as before)              # end of tree
     ;   / \                   / \                                    |
     ;     Intermediate Node      Intermediate Node (same as before)  ^ climb tree
     ;      / \                     / \                               |
@@ -49,8 +49,7 @@ SZTZ_ClimbTree:
     ${GetTopTree()}                 :JMPZ(SZTZ_Latch)
 
     ; If next key bit is zero, then the sibling hash must be at the right (sibling's key bit is 1)
-    ${GetNextKeyBit()} => RKEY_BIT
-    RKEY_BIT                        :JMPZ(SZTZ_SiblingIsRight)
+    ${GetNextKeyBit()} => RKEY_BIT  :JMPZ(SZTZ_SiblingIsRight)
 
 SZTZ_SiblingIsLeft:
 
@@ -87,5 +86,9 @@ SZTZ_SiblingIsRight:
                                     :JMP(SZTZ_ClimbTree)
 
 SZTZ_Latch:
-                                    :LATCH_SET              ; At this point consistency is granted: OLD_ROOT, NEW_ROOT, RKEY (complete key), VALUE_LOW, VALUE_HIGH, LEVEL
+
+    ; At this point consistency is granted: OLD_ROOT, NEW_ROOT, RKEY (complete key), VALUE_LOW, VALUE_HIGH, LEVEL
+                                    :LATCH_SET
+
+    ; Return to the main loop
                                     :JMP(Run)
