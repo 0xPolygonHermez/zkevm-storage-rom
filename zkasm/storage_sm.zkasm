@@ -33,10 +33,12 @@ INCLUDE "storage_sm_set_delete_found.zkasm"
 INCLUDE "storage_sm_set_delete_not_found.zkasm"
 INCLUDE "storage_sm_set_zero_to_zero.zkasm"
 
-; Rest of instructions: selPC=1, JMPZ 0
-; Executor = specific itinerary accross the rom
-
-NotEndPol:
+    ; Reset the registers to 0 for the rest of the evaluations
     0 => HASH_LEFT, HASH_RIGHT, OLD_ROOT, NEW_ROOT, VALUE_LOW, VALUE_HIGH, SIBLING_VALUE_HASH, RKEY, SIBLING_RKEY, RKEY_BIT, LEVEL
-    ${isEndPolynomial()}    :JMPZ(NotEndPol)
+
+    ; Loop until we reach almost the end of the polynomial, i.e. only one more evaluation is pending
+NotEndPol:
+    ${isAlmostEndPolynomial()} :JMPZ(NotEndPol)
+
+    ; The last evaluation instruction: jump to the beginning of the main rom loop, i.e. to label 0
                             :JMP(Run)
