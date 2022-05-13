@@ -26,6 +26,7 @@ LATCH_SET               { return 'LATCH_SET' }
 LATCH_GET               { return 'LATCH_GET' }
 CLIMB_RKEY              { return 'CLIMB_RKEY' }
 CLIMB_SIBLING_RKEY      { return 'CLIMB_SIBLING_RKEY' }
+CLIMB_SIBLING_RKEY_N    { return 'CLIMB_SIBLING_RKEY_N' }
 JMPZ                    { return 'JMPZ' }
 JMP                     { return 'JMP' }
 ROTATE_LEVEL            { return 'ROTATE_LEVEL' }
@@ -266,6 +267,10 @@ op
     | CLIMB_SIBLING_RKEY 
         {
             $$ = { iClimbSiblingRkey: 1n}
+        }
+    | CLIMB_SIBLING_RKEY_N
+        {
+            $$ = { iClimbSiblingRkeyN: 1n}
         }
     | ROTATE_LEVEL 
         {

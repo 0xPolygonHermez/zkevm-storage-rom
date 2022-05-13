@@ -72,7 +72,7 @@ SDF_SiblingIsLeft1:
 
                                     :ROTATE_LEVEL
                                     :CLIMB_RKEY
-                                    :CLIMB_SIBLING_RKEY
+                                    :CLIMB_SIBLING_RKEY_N
 
                                     :JMP(SDF_ClimbBranch)
 
@@ -86,7 +86,7 @@ SDF_SiblingIsRight1:
     ; Update remaining keys
                                     :ROTATE_LEVEL
                                     :CLIMB_RKEY
-                                    :CLIMB_SIBLING_RKEY
+                                    :CLIMB_SIBLING_RKEY_N
 
 SDF_ClimbBranch:
 

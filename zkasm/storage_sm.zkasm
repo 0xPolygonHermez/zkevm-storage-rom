@@ -21,7 +21,7 @@ Run_IsSetDeleteNotFound:
     ${isSetDeleteNotFound()}:JMPZ(Run_IsSetZeroToZero)
                             :JMP(Set_DeleteNotFound)
 Run_IsSetZeroToZero:
-    ${isSetZeroToZero()}    :JMPZ(NotEndPol)
+    ${isSetZeroToZero()}    :JMPZ(SetAllToZero)
                             :JMP(Set_ZeroToZero)
 
 INCLUDE "storage_sm_get.zkasm"
@@ -33,6 +33,7 @@ INCLUDE "storage_sm_set_delete_found.zkasm"
 INCLUDE "storage_sm_set_delete_not_found.zkasm"
 INCLUDE "storage_sm_set_zero_to_zero.zkasm"
 
+SetAllToZero:
     ; Reset the registers to 0 for the rest of the evaluations
     0 => HASH_LEFT, HASH_RIGHT, OLD_ROOT, NEW_ROOT, VALUE_LOW, VALUE_HIGH, SIBLING_VALUE_HASH, RKEY, SIBLING_RKEY, RKEY_BIT, LEVEL
 

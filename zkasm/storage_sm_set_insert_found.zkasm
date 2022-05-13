@@ -72,7 +72,7 @@ SIF_SiblingIsLeft1:
     ; Update remaining keys
                                     :ROTATE_LEVEL
                                     :CLIMB_RKEY
-                                    :CLIMB_SIBLING_RKEY
+                                    :CLIMB_SIBLING_RKEY_N
 
                                     :JMP(SIF_ClimbBranch)
 
@@ -86,7 +86,7 @@ SIF_SiblingIsRight1:
     ; Update remaining keys
                                     :ROTATE_LEVEL
                                     :CLIMB_RKEY
-                                    :CLIMB_SIBLING_RKEY
+                                    :CLIMB_SIBLING_RKEY_N
 
 SIF_ClimbBranch:
 
