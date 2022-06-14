@@ -23,6 +23,9 @@ Set_ZeroToZero:
 
     ; NewRoot = OldRoot
     OLD_ROOT => NEW_ROOT
+    
+    ; Forced to zero, because we are setting to zero.
+    0 => VALUE_LOW, VALUE_HIGH
 
 SZTZ_InitLevel:
 
