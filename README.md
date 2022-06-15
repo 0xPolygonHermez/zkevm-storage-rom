@@ -11,3 +11,7 @@ npm run build
 node src/zkasmstorage.js [inputFile.zkasm] -o [outFile.json]
 
 `````
+## Example storage ROM generation
+`````
+node src/zkasmstorage.js zkasm/storage_sm.zkasm -o build/storage_sm_rom.json
+`````

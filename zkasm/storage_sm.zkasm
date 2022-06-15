@@ -1,5 +1,8 @@
 Run:
 
+    ; Reset the registers to 0 before evaluate next input, if there aren't inputs, for the rest of the evaluations
+    0 => HASH_LEFT, HASH_RIGHT, OLD_ROOT, NEW_ROOT, VALUE_LOW, VALUE_HIGH, SIBLING_VALUE_HASH, RKEY, SIBLING_RKEY, RKEY_BIT, LEVEL
+
     ${isGet()}              :JMPZ(Run_IsSetUpdate)
                             :JMP(Get)
 Run_IsSetUpdate:

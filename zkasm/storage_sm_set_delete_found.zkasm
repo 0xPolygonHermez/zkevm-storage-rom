@@ -26,16 +26,19 @@ Set_DeleteFound:
     ${GetRKey()} => RKEY
     RKEY => HASH_LEFT
     $ => OLD_ROOT                   :HASH1
-    
-    ; NewValueHash = Hash0( VALUE_LOW, VALUE_HIGH )
-    ${GetSiblingValueLow()} => VALUE_LOW, HASH_LEFT
-    ${GetSiblingValueHigh()} => VALUE_HIGH, HASH_RIGHT
+
+    ; NewValueHash = Hash0( SIBLING_VALUE_LOW, SIBLING_VALUE_HIGH )
+    ${GetSiblingValueLow()} => HASH_LEFT
+    ${GetSiblingValueHigh()} => HASH_RIGHT
     $ => SIBLING_VALUE_HASH, HASH_RIGHT :HASH0
 
-    ; NewRoot = LeafNodeHash = Hash1( RKEY, Hash0( VALUE_LOW, VALUE_HIGH ) )
+    ; NewRoot = LeafNodeHash = Hash1( RKEY, Hash0( SIBLING_VALUE_LOW, SIBLING_VALUE_HIGH ) )
     ${GetSiblingRKey()} => SIBLING_RKEY
     SIBLING_RKEY => HASH_LEFT
     $ => NEW_ROOT                   :HASH1
+
+    ; Forced to zero, because we are setting to zero.
+    0 => VALUE_LOW, VALUE_HIGH
 
 SDF_InitLevel:
 
@@ -82,7 +85,7 @@ SDF_SiblingIsRight1:
     OLD_ROOT => HASH_LEFT
     NEW_ROOT => HASH_RIGHT
     $ => OLD_ROOT                   :HASH0
-    
+
     ; Update remaining keys
                                     :ROTATE_LEVEL
                                     :CLIMB_RKEY

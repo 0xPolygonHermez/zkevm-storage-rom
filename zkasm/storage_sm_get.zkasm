@@ -25,7 +25,7 @@ Get:
     ${GetValueHigh()} => VALUE_HIGH  :JMP(Get_ValueIsNotZero)
 
 Get_ValueLowIsZero:
-   
+
     ${GetValueHigh()} => VALUE_HIGH  :JMPZ(Get_ValueIsZero)
 
 Get_ValueIsNotZero:
@@ -75,7 +75,7 @@ Get_ClimbTree:
     ; If next key bit is zero, then the sibling hash must be at the right (sibling's key bit is 1)
     ${GetNextKeyBit()} => RKEY_BIT
     RKEY_BIT                        :JMPZ(Get_SiblingIsRight)
- 
+
 Get_SiblingIsLeft:
 
     ; OldRoot = Hash0( SiblingHash, OldRoot );
