@@ -75,8 +75,8 @@ var command_parser = (function(){
 var o=function(k,v,o,l){for(o=o||{},l=k.length;l--;o[k[l]]=v);return o},$V0=[1,10],$V1=[1,11],$V2=[1,15],$V3=[1,17],$V4=[1,6],$V5=[1,7],$V6=[1,18],$V7=[1,19],$V8=[1,20],$V9=[1,21],$Va=[1,22],$Vb=[1,23],$Vc=[1,24],$Vd=[1,25],$Ve=[1,26],$Vf=[1,27],$Vg=[1,28],$Vh=[1,29],$Vi=[1,30],$Vj=[5,23,40],$Vk=[5,10,12,13,15,16,23,40],$Vl=[2,17],$Vm=[5,8,10,12,13,15,16,23,40],$Vn=[5,10,12,23,40],$Vo=[1,37],$Vp=[1,38],$Vq=[1,39],$Vr=[23,40];
 var parser = {trace: function trace () { },
 yy: {},
-symbols_: {"error":2,"tag":3,"expression":4,"EOF":5,"e5":6,"leftExpression":7,"=":8,"e4":9,"+":10,"e3":11,"-":12,"*":13,"e2":14,"/":15,"%":16,"e1":17,"functionCall":18,"e0":19,"NUMBER":20,"reg":21,"(":22,")":23,"VAR":24,"IDENTIFIER":25,"A":26,"B":27,"C":28,"D":29,"E":30,"SR":31,"CTX":32,"SP":33,"PC":34,"GAS":35,"uPC":36,"STEP":37,"MAXMEM":38,"expressionList":39,",":40,"$accept":0,"$end":1},
-terminals_: {2:"error",5:"EOF",8:"=",10:"+",12:"-",13:"*",15:"/",16:"%",20:"NUMBER",22:"(",23:")",24:"VAR",25:"IDENTIFIER",26:"A",27:"B",28:"C",29:"D",30:"E",31:"SR",32:"CTX",33:"SP",34:"PC",35:"GAS",36:"uPC",37:"STEP",38:"MAXMEM",40:","},
+symbols_: {"error":2,"tag":3,"expression":4,"EOF":5,"e5":6,"leftExpression":7,"=":8,"e4":9,"+":10,"e3":11,"-":12,"*":13,"e2":14,"/":15,"%":16,"e1":17,"functionCall":18,"e0":19,"NUMBER":20,"reg":21,"(":22,")":23,"VAR":24,"IDENTIFIER":25,"HASH_LEFT":26,"HASH_RIGHT":27,"OLD_ROOT":28,"NEW_ROOT":29,"VALUE_LOW":30,"VALUE_HIGH":31,"SIBLING_VALUE_HASH":32,"RKEY":33,"SIBLING_RKEY":34,"RKEY_BIT":35,"LEVEL":36,"PC":37,"ROTL_VH":38,"expressionList":39,",":40,"$accept":0,"$end":1},
+terminals_: {2:"error",5:"EOF",8:"=",10:"+",12:"-",13:"*",15:"/",16:"%",20:"NUMBER",22:"(",23:")",24:"VAR",25:"IDENTIFIER",26:"HASH_LEFT",27:"HASH_RIGHT",28:"OLD_ROOT",29:"NEW_ROOT",30:"VALUE_LOW",31:"VALUE_HIGH",32:"SIBLING_VALUE_HASH",33:"RKEY",34:"SIBLING_RKEY",35:"RKEY_BIT",36:"LEVEL",37:"PC",38:"ROTL_VH",40:","},
 productions_: [0,[3,2],[4,1],[6,3],[6,1],[9,3],[9,3],[9,1],[11,3],[11,3],[11,3],[11,1],[14,2],[14,2],[14,1],[17,1],[17,1],[19,1],[19,1],[19,1],[19,3],[7,2],[7,1],[21,1],[21,1],[21,1],[21,1],[21,1],[21,1],[21,1],[21,1],[21,1],[21,1],[21,1],[21,1],[21,1],[18,4],[18,3],[39,3],[39,1]],
 performAction: function anonymous(yytext, yyleng, yylineno, yy, yystate /* action[1] */, $$ /* vstack */, _$ /* lstack */) {
 /* this == yyval */
@@ -663,86 +663,64 @@ case 0: yy_.yytext = Number(yy_.yytext.replace(/\_/g, "")); return 20;
 break;
 case 1: /* console.log("Empty spaces"); */ 
 break;
-case 2: return 'HASH_LEFT'; 
+case 2: return 26; 
 break;
-case 3: return 'HASH_RIGHT'; 
+case 3: return 27; 
 break;
-case 4: return 'OLD_ROOT'; 
+case 4: return 28; 
 break;
-case 5: return 'NEW_ROOT'; 
+case 5: return 29; 
 break;
-case 6: return 'VALUE_LOW'; 
+case 6: return 30; 
 break;
-case 7: return 'VALUE_HIGH'; 
+case 7: return 31; 
 break;
-case 8: return 'SIBLING_VALUE_HASH'; 
+case 8: return 32; 
 break;
 case 9: return 'FREE'; 
 break;
-case 10: return 'RKEY'; 
+case 10: return 33; 
 break;
-case 11: return 'SIBLING_RKEY'; 
+case 11: return 34; 
 break;
-case 12: return 'RKEY_BIT'; 
+case 12: return 35; 
 break;
-case 13: return 'LEVEL'; 
+case 13: return 36; 
 break;
-case 14: return 26; 
+case 14: return 38; 
 break;
-case 15: return 27; 
+case 15: return 37; 
 break;
-case 16: return 28; 
+case 16: return 24; 
 break;
-case 17: return 29; 
+case 17: return 25; 
 break;
-case 18: return 30; 
+case 18: return 22
 break;
-case 19: return 31; 
+case 19: return 23
 break;
-case 20: return 32; 
+case 20: return 10
 break;
-case 21: return 33; 
+case 21: return 40
 break;
-case 22: return 34; 
+case 22: return 12
 break;
-case 23: return 35; 
+case 23: return 13
 break;
-case 24: return 36; 
+case 24: return 15
 break;
-case 25: return 37; 
+case 25: return 16
 break;
-case 26: return 38; 
+case 26: return 8 
 break;
-case 27: return 24; 
+case 27: return 5; 
 break;
-case 28: return 25; 
-break;
-case 29: return 22
-break;
-case 30: return 23
-break;
-case 31: return 10
-break;
-case 32: return 40
-break;
-case 33: return 12
-break;
-case 34: return 13
-break;
-case 35: return 15
-break;
-case 36: return 16
-break;
-case 37: return 8 
-break;
-case 38: return 5; 
-break;
-case 39: /* console.log("INVALID: " + yy_.yytext); */ return 'INVALID'; 
+case 28: /* console.log("INVALID: " + yy_.yytext); */ return 'INVALID'; 
 break;
 }
 },
-rules: [/^(?:(0x[0-9A-Fa-f][0-9A-Fa-f_]*)|([0-9][0-9_]*))/,/^(?:[ \t\r\n]+)/,/^(?:HASH_LEFT\b)/,/^(?:HASH_RIGHT\b)/,/^(?:OLD_ROOT\b)/,/^(?:NEW_ROOT\b)/,/^(?:VALUE_LOW\b)/,/^(?:VALUE_HIGH\b)/,/^(?:SIBLING_VALUE_HASH\b)/,/^(?:FREE\b)/,/^(?:RKEY\b)/,/^(?:SIBLING_RKEY\b)/,/^(?:RKEY_BIT\b)/,/^(?:LEVEL\b)/,/^(?:A\b)/,/^(?:B\b)/,/^(?:C\b)/,/^(?:D\b)/,/^(?:E\b)/,/^(?:SR\b)/,/^(?:CTX\b)/,/^(?:SP\b)/,/^(?:PC\b)/,/^(?:GAS\b)/,/^(?:uPC\b)/,/^(?:STEP\b)/,/^(?:MAXMEM\b)/,/^(?:var\b)/,/^(?:[a-zA-Z_][a-zA-Z$_0-9\+]*)/,/^(?:\()/,/^(?:\))/,/^(?:\+)/,/^(?:,)/,/^(?:-)/,/^(?:\*)/,/^(?:\/)/,/^(?:%)/,/^(?:=)/,/^(?:$)/,/^(?:.)/],
-conditions: {"INITIAL":{"rules":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39],"inclusive":true}}
+rules: [/^(?:(0x[0-9A-Fa-f][0-9A-Fa-f_]*)|([0-9][0-9_]*))/,/^(?:[ \t\r\n]+)/,/^(?:HASH_LEFT\b)/,/^(?:HASH_RIGHT\b)/,/^(?:OLD_ROOT\b)/,/^(?:NEW_ROOT\b)/,/^(?:VALUE_LOW\b)/,/^(?:VALUE_HIGH\b)/,/^(?:SIBLING_VALUE_HASH\b)/,/^(?:FREE\b)/,/^(?:RKEY\b)/,/^(?:SIBLING_RKEY\b)/,/^(?:RKEY_BIT\b)/,/^(?:LEVEL\b)/,/^(?:ROTL_VH\b)/,/^(?:PC\b)/,/^(?:var\b)/,/^(?:[a-zA-Z_][a-zA-Z$_0-9\+]*)/,/^(?:\()/,/^(?:\))/,/^(?:\+)/,/^(?:,)/,/^(?:-)/,/^(?:\*)/,/^(?:\/)/,/^(?:%)/,/^(?:=)/,/^(?:$)/,/^(?:.)/],
+conditions: {"INITIAL":{"rules":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28],"inclusive":true}}
 });
 return lexer;
 })();

@@ -15,20 +15,9 @@ RKEY                    { return 'RKEY'; }
 SIBLING_RKEY            { return 'SIBLING_RKEY'; }
 RKEY_BIT                { return 'RKEY_BIT'; }
 LEVEL                   { return 'LEVEL'; }
-A                       { return 'A'; }
-B                       { return 'B'; }
-C                       { return 'C'; }
-D                       { return 'D'; }
-E                       { return 'E'; }
-SR                      { return 'SR'; }
-CTX                     { return 'CTX'; }
-SP                      { return 'SP'; }
+ROTL_VH                 { return 'ROTL_VH'; }
 PC                      { return 'PC'; }
-GAS                     { return 'GAS'; }
-uPC                     { return 'uPC'; }
-STEP                    { return 'STEP'; }
-MAXMEM                  { return 'MAXMEM'; }
-var                    { return 'VAR'; }
+var                     { return 'VAR'; }
 [a-zA-Z_][a-zA-Z$_0-9\+]*  { return 'IDENTIFIER'; }
 \(                      { return '('}
 \)                      { return ')'}
@@ -177,21 +166,20 @@ leftExpression
         }
     ;
 
-
-reg 
-    : A 
-    | B 
-    | C 
-    | D 
-    | E 
-    | SR 
-    | CTX 
-    | SP 
-    | PC 
-    | GAS 
-    | uPC 
-    | STEP 
-    | MAXMEM 
+reg
+    : HASH_LEFT
+    | HASH_RIGHT
+    | OLD_ROOT
+    | NEW_ROOT
+    | VALUE_LOW
+    | VALUE_HIGH
+    | SIBLING_VALUE_HASH
+    | RKEY
+    | SIBLING_RKEY
+    | RKEY_BIT
+    | LEVEL
+    | PC
+    | ROTL_VH
     ;
 
 functionCall

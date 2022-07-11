@@ -30,6 +30,7 @@ CLIMB_SIBLING_RKEY_N    { return 'CLIMB_SIBLING_RKEY_N' }
 JMPZ                    { return 'JMPZ' }
 JMP                     { return 'JMP' }
 ROTATE_LEVEL            { return 'ROTATE_LEVEL' }
+ROTL_VH                 { return 'ROTL_VH' }
 INCLUDE                 { return 'INCLUDE' }
 \"[^"]+\"               { yytext = yytext.slice(1,-1); return 'STRING'; }
 [a-zA-Z_][a-zA-Z$_0-9\+\.\>\<\=\-\!]*  { return 'IDENTIFIER'; }
@@ -264,7 +265,7 @@ op
         {
             $$ = {iClimbRkey: 1n}
         }
-    | CLIMB_SIBLING_RKEY 
+    | CLIMB_SIBLING_RKEY
         {
             $$ = { iClimbSiblingRkey: 1n}
         }
@@ -272,15 +273,15 @@ op
         {
             $$ = { iClimbSiblingRkeyN: 1n}
         }
-    | ROTATE_LEVEL 
+    | ROTATE_LEVEL
         {
             $$ = { iRotateLevel: 1n}
         }
     ;
 
 
-reg 
-    : HASH_LEFT 
+reg
+    : HASH_LEFT
     | HASH_RIGHT
     | OLD_ROOT
     | NEW_ROOT
@@ -292,5 +293,6 @@ reg
     | RKEY_BIT
     | LEVEL
     | PC
+    | ROTL_VH
     ;
 
