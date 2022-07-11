@@ -27,20 +27,51 @@ Get:
 
     ; Get the retrieved value
     ; If value is 0, skip the leaf node creation and go to Get_ValueIsZero
-    ${GetValueLow()} => VALUE_LOW    :JMPZ(Get_ValueLowIsZero)
-    ${GetValueHigh()} => VALUE_HIGH  :JMP(Get_ValueIsNotZero)
 
-Get_ValueLowIsZero:
+    ${getValueLow()} => VALUE_LOW, VALUE_HIGH :JMPZ(Get_VL0IsZero)
+                                              :JMP(Get_ValueLowIsNotZero)
 
-    ${GetValueHigh()} => VALUE_HIGH  :JMPZ(Get_ValueIsZero)
+Get_VL0IsZero:
+    ROTL_VH => VALUE_HIGH       :JMPZ(Get_VL01IsZero)
+                                :JMP(Get_ValueLowIsNotZero)
+
+Get_VL01IsZero:
+    ROTL_VH => VALUE_HIGH       :JMPZ(Get_VL012IsZero)
+                                :JMP(Get_ValueLowIsNotZero)
+
+Get_VL012IsZero:
+    ROTL_VH => VALUE_HIGH       :JMPZ(Get_VL0123IsZero)
+                                :JMP(Get_ValueLowIsNotZero)
+
+Get_VL0123IsZero:
+    ${getValueHigh()} => VALUE_HIGH :JMPZ(Get_VL0123VH0IsZero)
+                                    :JMP(Get_ValueIsNotZero)
+
+Get_VL0123VH0IsZero:
+    ROTL_VH => VALUE_HIGH       :JMPZ(Get_VL0123VH01IsZero)
+    ROTL_VH => VALUE_HIGH
+    ROTL_VH => VALUE_HIGH
+    ROTL_VH => VALUE_HIGH       :JMP(Get_ValueIsNotZero)
+
+Get_VL0123VH01IsZero:
+    ROTL_VH => VALUE_HIGH        :JMPZ(Get_VL0123VH012IsZero)
+    ROTL_VH => VALUE_HIGH
+    ROTL_VH => VALUE_HIGH        :JMP(Get_ValueIsNotZero)
+
+Get_VL0123VH012IsZero:
+    ROTL_VH => VALUE_HIGH        :JMPZ(Get_ValueIsZero)
+    ROTL_VH => VALUE_HIGH        :JMP(Get_ValueIsNotZero)
+
+Get_ValueLowIsNotZero:
+    ${getValueHigh()} => VALUE_HIGH
 
 Get_ValueIsNotZero:
 
     ; Create the value hash and the leaf node hash, which will be the initial value of old root
 
     ; ValueHash = Hash0( VALUE_LOW, VALUE_HIGH )
-    ${GetValueLow()} => VALUE_LOW, HASH_LEFT
-    ${GetValueHigh()} => VALUE_HIGH, HASH_RIGHT
+    VALUE_LOW => HASH_LEFT
+    VALUE_HIGH => HASH_RIGHT
     $ => HASH_RIGHT                 :HASH0
 
     ; OldRoot = LeafNodeHash = Hash1( RKey, Hash( VALUE_LOW, VALUE_HIGH ) )
