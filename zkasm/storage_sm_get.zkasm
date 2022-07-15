@@ -12,9 +12,15 @@ Get:
     ;     We have to create the value hash entry and the corresponding leaf node
     ;     that will be the first value of old root, and then climb the tree up to the top
     ;
-    ; 2.- We could not find the key, and therefore value is zero
-    ;     We have to start with old root = 0, and then climb the tree up to the top
-    ;     In case we are already at the top (no siblings) the old root will remain 0
+    ; 2.- We could not find the key, and therefore value is zero. In this situation, there are
+    ;     two possibilities, we stop de search on an intermediate node (2A) or on a leaf node.
+    ;
+    ;     2A.- We have to start with old root = 0, and then climb the tree up to the top
+    ;          In case we are already at the top (no siblings) the old root will remain 0
+    ;
+    ;     2B.- We have to start with hash of leaf, to calculate hash need to use values of
+    ;          remaining key and value of the leaf node.
+
 
     ; Get the remaining key
     ${GetRKey()} => RKEY
@@ -45,8 +51,26 @@ Get_ValueIsNotZero:
 
 Get_ValueIsZero:
 
+    ${GetIsOld0()}                  :JMPZ(Get_ValueIsZero_LeafNode)
+                                    :JMP(Get_ValueIsZero_IntermediateNode)
+
+Get_ValueIsZero_LeafNode:
+
+    ; How was a leaf node, will calculate hash of leaf.
+
+    ${GetSiblingValueLow()} => HASH_LEFT
+    ${GetSiblingValueHigh()} => HASH_RIGHT
+    $ => HASH_RIGHT                 :HASH0
+
+    ${GetInsRKey()} => HASH_LEFT
+    $ => OLD_ROOT                   :HASH1
+                                    :JMP(Get_InitLevel)
+
+Get_ValueIsZero_IntermediateNode:
+
     ; No need to calculate the hash; the next intermediate node will use simply 0 as a hash
     0x0 => OLD_ROOT
+
 
 Get_InitLevel:
 
