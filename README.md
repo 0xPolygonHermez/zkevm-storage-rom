@@ -1,17 +1,25 @@
-# zkASM Compiler
+# zkASM Storage Compiler
+This repo compiles .zkasm storage to a json file
 
-This repo compiles .zkasm to a json ready for the zkExecutor
-
-## Usage
-
-`````
+## Setup
+```
 npm install
 npm run build
-
-node src/zkasmstorage.js [inputFile.zkasm] -o [outFile.json]
-
-`````
-## Example storage ROM generation
-`````
+```
+## Usage
+Generate json file from zkasm storage file:
+```sh
+node src/zkasmstorage.js <inputFile.zkasm> -o <outFile.json>
+```
+Example:
+```sh
 node src/zkasmstorage.js zkasm/storage_sm.zkasm -o build/storage_sm_rom.json
-`````
+```
+
+## License
+
+### Copyright
+Polygon `pilcom` was developed by Polygon. While we plan to adopt an open source license, we haven’t selected one yet, so all rights are reserved for the time being. Please reach out to us if you have thoughts on licensing.  
+  
+### Disclaimer
+This code has not yet been audited, and should not be used in any production systems.
