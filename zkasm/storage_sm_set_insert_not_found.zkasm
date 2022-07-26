@@ -12,14 +12,14 @@ Set_InsertNotFound:
     ; and then, climb the tree until the top, i.e. until the root
 
     ; Create the a new leaf nodes for the new value
-    
+
     ; NewValueHash = Hash0( VALUE_LOW, VALUE_HIGH )
     ${GetValueLow()} => VALUE_LOW, HASH_LEFT
     ${GetValueHigh()} => VALUE_HIGH, HASH_RIGHT
     $ => HASH_RIGHT                 :HASH0
 
     ; NewRoot = LeafNodeHash = Hash1( RKEY, Hash0( VALUE_LOW, VALUE_HIGH ) )
-    ${GetRKey()} => RKEY, HASH_LEFT
+    ${GetRkey()} => RKEY, HASH_LEFT
     $ => NEW_ROOT                   :HASH1
 
 SINF_InitLevel:

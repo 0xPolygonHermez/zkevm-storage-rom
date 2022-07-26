@@ -23,7 +23,7 @@ Set_DeleteFound:
     $ => HASH_RIGHT :HASH0
 
     ; OldRoot = LeafNodeHash = Hash1( SIBLING_RKEY, Hash(0 SIBLING_VALUE_LOW, SIBLING_VALUE_HIGH ) )
-    ${GetRKey()} => RKEY
+    ${GetRkey()} => RKEY
     RKEY => HASH_LEFT
     $ => OLD_ROOT                   :HASH1
 
@@ -33,7 +33,7 @@ Set_DeleteFound:
     $ => SIBLING_VALUE_HASH, HASH_RIGHT :HASH0
 
     ; NewRoot = LeafNodeHash = Hash1( RKEY, Hash0( SIBLING_VALUE_LOW, SIBLING_VALUE_HIGH ) )
-    ${GetSiblingRKey()} => SIBLING_RKEY
+    ${GetSiblingRkey()} => SIBLING_RKEY
     SIBLING_RKEY => HASH_LEFT
     $ => NEW_ROOT                   :HASH1
 

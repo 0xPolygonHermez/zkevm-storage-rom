@@ -6,18 +6,18 @@ Set_Update:
     ;     /\                      / \                               |
     ;       Old Value Node  --->     New Value Node (modified)      * start here
 
-    ; We have found an existing key and old value, so we just have to modify the 
+    ; We have found an existing key and old value, so we just have to modify the
     ; value, the node hash, and the hashes of the nodes in the way to the top of the tree
     ; The topology of the tree (nodes) does not change, only their hashes
 
-    ${GetRKey()} => RKEY
+    ${GetRkey()} => RKEY
 
     ; OldValueHash = Hash0( OLD_VALUE_LOW, OLD_VALUE_HIGH )
     ${GetOldValueLow()} => HASH_LEFT
     ${GetOldValueHigh()} => HASH_RIGHT
     $ => HASH_RIGHT                 :HASH0
 
-    ; OldRoot = LeafNodeHash = Hash1( RKey, Hash( VALUE_LOW, VALUE_HIGH ) )
+    ; OldRoot = LeafNodeHash = Hash1( Rkey, Hash( VALUE_LOW, VALUE_HIGH ) )
     RKEY => HASH_LEFT
     $ => OLD_ROOT                   :HASH1
 
@@ -26,7 +26,7 @@ Set_Update:
     ${GetValueHigh()} => VALUE_HIGH, HASH_RIGHT
     $ => HASH_RIGHT                 :HASH0
 
-    ; NewRoot = LeafNodeHash = Hash1( RKey, Hash( VALUE_LOW, VALUE_HIGH ) )
+    ; NewRoot = LeafNodeHash = Hash1( Rkey, Hash( VALUE_LOW, VALUE_HIGH ) )
     RKEY => HASH_LEFT
     $ => NEW_ROOT                   :HASH1
 
@@ -71,7 +71,7 @@ SU_SiblingIsLeft:
     ; Update remaining key
                                     :ROTATE_LEVEL
                                     :CLIMB_RKEY
-                                    
+
                                     :JMP(SU_ClimbTree)
 
 SU_SiblingIsRight:

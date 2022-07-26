@@ -23,33 +23,33 @@ Get:
 
 
     ; Get the remaining key
-    ${GetRKey()} => RKEY
+    ${GetRkey()} => RKEY
 
     ; Get the retrieved value
     ; If value is 0, skip the leaf node creation and go to Get_ValueIsZero
 
-    ${getValueLow()} => VALUE_LOW, VALUE_HIGH :JMPZ(Get_VL0IsZero)
+    ${GetValueLow()} => VALUE_LOW, VALUE_HIGH :JMPZ(Get_VL0IsZero)
                                               :JMP(Get_VLIsNotZero)
 
     ; Value is zero if and only if VL and VH are zero
     ; VL is zero if and only if VL0,VL1,VL2,VL3 are zero
 Get_VL0IsZero:
     ROTL_VH => VALUE_HIGH       :JMPZ(Get_VL01IsZero)
-                                :JMP(Get_ValueLowIsNotZero)
+                                :JMP(Get_VLIsNotZero)
 
     ; VL0,VL1 are zero
 Get_VL01IsZero:
     ROTL_VH => VALUE_HIGH       :JMPZ(Get_VL012IsZero)
-                                :JMP(Get_ValueLowIsNotZero)
+                                :JMP(Get_VLIsNotZero)
 
     ; VL0,VL1,VL2 are zero
 Get_VL012IsZero:
     ROTL_VH => VALUE_HIGH       :JMPZ(Get_VLIsZero)
-                                :JMP(Get_ValueLowIsNotZero)
+                                :JMP(Get_VLIsNotZero)
 
     ; VL0,VL1,VL2,VL3 are zero, means VL is zero
 Get_VLIsZero:
-    ${getValueHigh()} => VALUE_HIGH :JMPZ(Get_VL0123VH0IsZero)
+    ${GetValueHigh()} => VALUE_HIGH :JMPZ(Get_VLVH0IsZero)
                                     :JMP(Get_ValueIsNotZero)
 
     ; VL,VH0 are zero
@@ -71,7 +71,7 @@ Get_VLVH012IsZero:
     ; VL isn't zero, but need to read VALUE_HIGH because finished to compare
     ; registers before VALUE_HIGH was read
 Get_VLIsNotZero:
-    ${getValueHigh()} => VALUE_HIGH
+    ${GetValueHigh()} => VALUE_HIGH
 
 Get_ValueIsNotZero:
 
@@ -82,7 +82,7 @@ Get_ValueIsNotZero:
     VALUE_HIGH => HASH_RIGHT
     $ => HASH_RIGHT                 :HASH0
 
-    ; OldRoot = LeafNodeHash = Hash1( RKey, Hash( VALUE_LOW, VALUE_HIGH ) )
+    ; OldRoot = LeafNodeHash = Hash1( Rkey, Hash( VALUE_LOW, VALUE_HIGH ) )
     RKEY => HASH_LEFT
     $ => OLD_ROOT                   :HASH1
 
@@ -101,7 +101,7 @@ Get_ValueIsZero_LeafNode:
     ${GetSiblingValueHigh()} => HASH_RIGHT
     $ => HASH_RIGHT                 :HASH0
 
-    ${GetInsRKey()} => HASH_LEFT
+    ${GetSiblingRkey()} => HASH_LEFT
     $ => OLD_ROOT                   :HASH1
                                     :JMP(Get_InitLevel)
 
