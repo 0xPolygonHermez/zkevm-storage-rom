@@ -1,10 +1,10 @@
 {
   "name": "@hermeznetwork/zkasm",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "bin": {
     "zkasm": "src/zkasm.js"
   },
-  "description": "zkASM compiler",
+  "description": "zkASM Storage compiler",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
