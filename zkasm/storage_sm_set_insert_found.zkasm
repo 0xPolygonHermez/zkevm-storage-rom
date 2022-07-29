@@ -23,17 +23,17 @@ Set_InsertFound:
     $ => SIBLING_VALUE_HASH, HASH_RIGHT :HASH0
 
     ; OldRoot = LeafNodeHash = Hash1( SIBLING_RKEY, Hash(0 SIBLING_VALUE_LOW, SIBLING_VALUE_HIGH ) )
-    ${GetSiblingRKey()} => SIBLING_RKEY
+    ${GetSiblingRkey()} => SIBLING_RKEY
     SIBLING_RKEY => HASH_LEFT
     $ => OLD_ROOT                   :HASH1
-    
+
     ; NewValueHash = Hash0( VALUE_LOW, VALUE_HIGH )
     ${GetValueLow()} => VALUE_LOW, HASH_LEFT
     ${GetValueHigh()} => VALUE_HIGH, HASH_RIGHT
     $ => HASH_RIGHT                 :HASH0
 
     ; NewRoot = LeafNodeHash = Hash1( RKEY, Hash0( VALUE_LOW, VALUE_HIGH ) )
-    ${GetRKey()} => RKEY, HASH_LEFT
+    ${GetRkey()} => RKEY, HASH_LEFT
     $ => NEW_ROOT                   :HASH1
 
 SIF_InitLevel:

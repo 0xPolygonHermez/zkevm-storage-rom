@@ -8,14 +8,14 @@ Set_DeleteLast:
     ; The new root will be zero, since the new tree will be empty
 
     ; Get the remaining key
-    ${GetRKey()} => RKEY
+    ${GetRkey()} => RKEY
 
     ; OldValueHash = Hash0( OLD_VALUE_LOW, OLD_VALUE_HIGH )
     ${GetOldValueLow()} => HASH_LEFT
     ${GetOldValueHigh()} => HASH_RIGHT
     $ => HASH_RIGHT                 :HASH0
 
-    ; OldRoot = LeafNodeHash = Hash1( RKey, Hash( VALUE_LOW, VALUE_HIGH ) )
+    ; OldRoot = LeafNodeHash = Hash1( Rkey, Hash( VALUE_LOW, VALUE_HIGH ) )
     RKEY => HASH_LEFT
     $ => OLD_ROOT                   :HASH1
 
