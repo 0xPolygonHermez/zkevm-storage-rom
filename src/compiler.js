@@ -29,9 +29,21 @@ module.exports = async function compile(fileName, ctx) {
     let pendingCommands = [];
     let lastLineAllowsCommand = false;
 
+    let relativeFileName;
+    if (isMain) {
+        relativeFileName = path.basename(fullFileName);
+        ctx.basePath = fileDir;
+    } else {
+        if (fullFileName.startsWith(ctx.basePath)) {
+            relativeFileName = fullFileName.substring(ctx.basePath.length+1);
+        } else {
+            relativeFileName = fullFileName;
+        }
+    }
+
     for (let i=0; i<lines.length; i++) {
         const l = lines[i];
-        l.fileName = fileName;
+        l.fileName = relativeFileName;
         if (l.type == "include") {
             const fullFileNameI = path.resolve(fileDir, l.file);
             await compile(fullFileNameI, ctx);
@@ -44,7 +56,7 @@ module.exports = async function compile(fileName, ctx) {
             try {
                 if (l.assignment) {
                     appendOp(traceStep, processAssignmentIn(l.assignment.in));
-                    appendOp(traceStep, processAssignmentOut(l.assignment.out));    
+                    appendOp(traceStep, processAssignmentOut(l.assignment.out));
                 }
                 for (let j=0; j< l.ops.length; j++) {
                     appendOp(traceStep, l.ops[j])
@@ -87,7 +99,7 @@ module.exports = async function compile(fileName, ctx) {
                     if (typeof ctx.definedLabels[ctx.out[i].addressLabel] === "undefined") {
                         error(ctx.out[i].line, `Label: ${ctx.out[i].addressLabel} not defined.`);
                     }
-                    ctx.out[i].address = ctx.definedLabels[ctx.out[i].addressLabel];                
+                    ctx.out[i].address = ctx.definedLabels[ctx.out[i].addressLabel];
                 } else {
                     throw new Error("Should not enter here");
                 }
@@ -107,7 +119,7 @@ module.exports = async function compile(fileName, ctx) {
             program:  stringifyBigInts(ctx.out),
             labels: ctx.definedLabels
         }
-        
+
         return res;
     }
 
@@ -160,8 +172,8 @@ function processAssignmentIn(input) {
         } else if (isConstant(E2)) {
             Object.keys(E1).forEach(function(key) {
                 E1[key] *= E2.CONST;
-            });          
-            return E1;   
+            });
+            return E1;
         } else {
             throw new Error("Multiplication not allowed in input");
         }
@@ -224,7 +236,7 @@ function error(l, err) {
     if (err instanceof Error) {
         err.message = `ERROR ${l.fileName}:${l.line}: ${err.message}`
         throw(err);
-    } else { 
+    } else {
         const msg = `ERROR ${l.fileName}:${l.line}: ${err}`;
         throw new Error(msg);
     }
