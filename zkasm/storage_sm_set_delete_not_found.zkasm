@@ -19,7 +19,7 @@ Set_DeleteNotFound:
     $ => HASH_RIGHT                 :HASH0
 
     ; OldRoot = LeafNodeHash = Hash1( RKEY, Hash0( OLD_VALUE_LOW, OLD_VALUE_HIGH ) )
-    ${GetRKey()} => RKEY, HASH_LEFT
+    ${GetRkey()} => RKEY, HASH_LEFT
     $ => OLD_ROOT                   :HASH1
 
 SDNF_InitLevel:
