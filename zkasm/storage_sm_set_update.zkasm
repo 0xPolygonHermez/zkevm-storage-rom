@@ -10,6 +10,8 @@ Set_Update:
     ; value, the node hash, and the hashes of the nodes in the way to the top of the tree
     ; The topology of the tree (nodes) does not change, only their hashes
 
+    ; Start point: before climbing the tree, get values of: RKEY, OLD_ROOT, NEW_ROOT
+
     ${GetRkey()} => RKEY
 
     ; OldValueHash = Hash0( OLD_VALUE_LOW, OLD_VALUE_HIGH )

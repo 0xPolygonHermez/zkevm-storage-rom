@@ -7,9 +7,9 @@ Set_DeleteNotFound:
     ;       Old Value Node  --->    Old Value Node (delete)        * start here
 
 
-    ; We have found a leaf node to delete, but the DelentNotFound name is given since this is the symmetric
+    ; We have found a leaf node to delete, but the DeleteNotFound name is given since this is the symmetric
     ; case of InsertNotFound, but swapping old root and new root
-    ; We have to (pretend to) delete thea old leaf node and climb the tree until the top, i.e. until the root
+    ; We have to (pretend to) delete the old leaf node and climb the tree until the top, i.e. until the root
 
     ; Create the a old leaf node for the old value
     
