@@ -22,7 +22,7 @@ Set_DeleteFound:
     ${GetOldValueHigh()} => HASH_RIGHT
     $ => HASH_RIGHT :HASH0
 
-    ; OldRoot = LeafNodeHash = Hash1( SIBLING_RKEY, Hash(0 SIBLING_VALUE_LOW, SIBLING_VALUE_HIGH ) )
+    ; OldRoot = LeafNodeHash = Hash1( SIBLING_RKEY, Hash0( SIBLING_VALUE_LOW, SIBLING_VALUE_HIGH ) )
     ${GetRkey()} => RKEY
     RKEY => HASH_LEFT
     $ => OLD_ROOT                   :HASH1
