@@ -1,9 +1,6 @@
 {
   "name": "@hermeznetwork/zkasm",
   "version": "0.0.13",
-  "bin": {
-    "zkasm": "src/zkasm.js"
-  },
   "description": "zkASM Storage compiler",
   "main": "index.js",
   "scripts": {
