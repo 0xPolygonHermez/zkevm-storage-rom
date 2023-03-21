@@ -1,16 +1,13 @@
 {
   "name": "@hermeznetwork/zkasm",
   "version": "0.0.13",
-  "bin": {
-    "zkasm": "src/zkasm.js"
-  },
   "description": "zkASM Storage compiler",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build_parser_zkasm": "mkdir -p build; ./node_modules/.bin/jison src/zkasm_parser.jison -o build/zkasm_parser.js",
     "build_parser_command": "mkdir -p build; ./node_modules/.bin/jison src/command_parser.jison -o build/command_parser.js",
-    "build": "npm run build_parser_zkasm && npm run build_parser_command",
+    "build": "npm run build_parser_zkasm && npm run build_parser_command && npm run build:rom",
     "build:rom": "node src/zkasmstorage.js zkasm/storage_sm.zkasm -o build/storage_sm_rom.json"
   },
   "keywords": [
