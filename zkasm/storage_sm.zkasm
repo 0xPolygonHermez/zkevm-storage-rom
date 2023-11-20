@@ -3,8 +3,12 @@ Run:
     ; Reset the registers to 0 before evaluate next input, if there aren't inputs, for the rest of the evaluations
     0 => HASH_LEFT, HASH_RIGHT, OLD_ROOT, NEW_ROOT, VALUE_LOW, VALUE_HIGH, SIBLING_VALUE_HASH, RKEY, SIBLING_RKEY, RKEY_BIT, LEVEL
 
+
+    ; if no isGet, permutation not match because others using iLatchSet, no iLatchGet
     ${isGet()}              :JMPZ(Run_IsSetUpdate)
                             :JMP(Get)
+
+    ; need to check that new value != 0
 Run_IsSetUpdate:
     ${isSetUpdate()}        :JMPZ(Run_IsSetInsertFound)
                             :JMP(Set_Update)

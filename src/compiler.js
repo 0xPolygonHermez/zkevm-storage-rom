@@ -13,6 +13,7 @@ module.exports = async function compile(fileName, ctx) {
             definedLabels: {},
             refs: [],
             out: [],
+            srcLines: []
         }
         isMain = true;
     } else {
@@ -40,6 +41,8 @@ module.exports = async function compile(fileName, ctx) {
             relativeFileName = fullFileName;
         }
     }
+
+    ctx.srcLines[relativeFileName] = src.split(/(?:\r\n|\n|\r)/);
 
     for (let i=0; i<lines.length; i++) {
         const l = lines[i];
@@ -95,7 +98,7 @@ module.exports = async function compile(fileName, ctx) {
     if (isMain) {
         for (let i=0; i<ctx.out.length; i++) {
             if (typeof ctx.out[i].addressLabel !== "undefined") {
-                if (ctx.out[i].iJmp || ctx.out[i].iJmpz) {
+                if (ctx.out[i].jmp || ctx.out[i].jmpz) {
                     if (typeof ctx.definedLabels[ctx.out[i].addressLabel] === "undefined") {
                         error(ctx.out[i].line, `Label: ${ctx.out[i].addressLabel} not defined.`);
                     }
@@ -113,6 +116,7 @@ module.exports = async function compile(fileName, ctx) {
             }
             ctx.out[i].fileName = ctx.out[i].line.fileName;
             ctx.out[i].line = ctx.out[i].line.line;
+            ctx.out[i].lineStr = ctx.srcLines[ctx.out[i].fileName][ctx.out[i].line - 1] ?? '';
         }
 
         const res = {

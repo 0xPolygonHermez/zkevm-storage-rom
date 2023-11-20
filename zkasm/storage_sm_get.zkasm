@@ -115,25 +115,12 @@ Get_InitLevel:
 
     ; Init LEVEL register to {1,0,0,0}, and inversely rotate it level%4 times,
     ; so that after level rotations the position of LEVEL becomes {1,0,0,0} again
-    0x1 => LEVEL
-
-    ; If level bit 0 is 1, then do 1 inverse rotation (i.e. 3 normal rotations)
-    ${GetLevelBit(0)}               :JMPZ(Get_LevelBit1)
-                                    :ROTATE_LEVEL
-                                    :ROTATE_LEVEL
-                                    :ROTATE_LEVEL
-
-Get_LevelBit1:
-
-    ; If level bit 1 is 1, then do 2 inverse rotations (i.e. 2 normal rotations)
-    ${GetLevelBit(1)}               :JMPZ(Get_ClimbTree)
-                                    :ROTATE_LEVEL
-                                    :ROTATE_LEVEL
+    ${GetLevel()} => LEVEL
 
 Get_ClimbTree:
 
     ; If we are at the top of the tree, then goto Get_Latch
-    ${GetTopTree()}                 :JMPZ(Get_Latch)
+    LEVEL                           :JMPZ(Get_Latch)
 
     ; If next key bit is zero, then the sibling hash must be at the right (sibling's key bit is 1)
     ${GetNextKeyBit()} => RKEY_BIT
@@ -147,10 +134,8 @@ Get_SiblingIsLeft:
     $ => OLD_ROOT                   :HASH0
 
     ; Update remaining key
-                                    :ROTATE_LEVEL
-                                    :CLIMB_RKEY
-
-                                    :JMP(Get_ClimbTree)
+    LEVEL - 1 => LEVEL
+                                    :CLIMB_RKEY, JMP(Get_ClimbTree)
 
 Get_SiblingIsRight:
 
@@ -160,15 +145,11 @@ Get_SiblingIsRight:
     $ => OLD_ROOT                   :HASH0
 
     ; Update remaining key
-                                    :ROTATE_LEVEL
-                                    :CLIMB_RKEY
-
-                                    :JMP(Get_ClimbTree)
+    LEVEL - 1 => LEVEL
+                                    :CLIMB_RKEY, JMP(Get_ClimbTree)
 
 Get_Latch:
 
     ; At this point consistency is granted: OLD_ROOT, RKEY (complete key), VALUE_LOW, VALUE_HIGH, LEVEL
-                                    :LATCH_GET
-
     ; Return to the main loop
-                                    :JMP(Run)
+                                    :LATCH_GET, JMP(Run)

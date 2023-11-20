@@ -25,11 +25,11 @@ HASH1                   { return 'HASH1' }
 LATCH_SET               { return 'LATCH_SET' }
 LATCH_GET               { return 'LATCH_GET' }
 CLIMB_RKEY              { return 'CLIMB_RKEY' }
+CLIMB_RKEY_N            { return 'CLIMB_RKEY_N' }
 CLIMB_SIBLING_RKEY      { return 'CLIMB_SIBLING_RKEY' }
 CLIMB_SIBLING_RKEY_N    { return 'CLIMB_SIBLING_RKEY_N' }
 JMPZ                    { return 'JMPZ' }
 JMP                     { return 'JMP' }
-ROTATE_LEVEL            { return 'ROTATE_LEVEL' }
 ROTL_VH                 { return 'ROTL_VH' }
 INCLUDE                 { return 'INCLUDE' }
 \"[^"]+\"               { yytext = yytext.slice(1,-1); return 'STRING'; }
@@ -239,43 +239,43 @@ opList
 op
     : JMP '(' IDENTIFIER ')'
         {
-            $$ = {iJmp: 1n, addressLabel: $3}
+            $$ = { jmp: 1n, addressLabel: $3 }
         }
     | JMPZ '(' IDENTIFIER ')'
         {
-            $$ = {iJmpz: 1n, addressLabel: $3}
+            $$ = { jmpz: 1n, addressLabel: $3 }
         }
     | HASH0
         {
-            $$ = {iHash: 1n, iHashType: 0}
+            $$ = { hash: 1n, hashType: 0}
         }
     | HASH1
         {
-            $$ = {iHash: 1n, iHashType: 1}
+            $$ = { hash: 1n, hashType: 1}
         }
     | LATCH_SET
         {
-            $$ = {iLatchSet: 1n}
+            $$ = { latchSet: 1n }
         }
     | LATCH_GET
         {
-            $$ = {iLatchGet: 1n}
+            $$ = { latchGet: 1n }
         }
     | CLIMB_RKEY
         {
-            $$ = {iClimbRkey: 1n}
+            $$ = { inFREE: 1n, setRKEY: 1n, climbRkey: 1n, climbSiblingRkey: 0n, climbBitN: 0n }
+        }
+    | CLIMB_RKEY_N
+        {
+            $$ = { inFREE: 1n, setRKEY: 1n, climbRkey: 1n, climbSiblingRkey: 0n, climbBitN: 1n }
         }
     | CLIMB_SIBLING_RKEY
         {
-            $$ = { iClimbSiblingRkey: 1n}
+            $$ = { inFREE: 1n, setSIBLING_RKEY: 1n, climbRkey: 0n, climbSiblingRkey: 1n, climbBitN: 0n }
         }
     | CLIMB_SIBLING_RKEY_N
         {
-            $$ = { iClimbSiblingRkeyN: 1n}
-        }
-    | ROTATE_LEVEL
-        {
-            $$ = { iRotateLevel: 1n}
+            $$ = { inFREE: 1n, setSIBLING_RKEY: 1n, climbRkey: 0n, climbSiblingRkey: 1n, climbBitN: 1n }
         }
     ;
 
@@ -295,4 +295,3 @@ reg
     | PC
     | ROTL_VH
     ;
-

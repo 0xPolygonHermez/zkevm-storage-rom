@@ -19,16 +19,21 @@ Set_ZeroToZero:
     ;                                    \                           |
     ;                                     0 (same as before)         * start here
 
-    ${GetRkey()} => RKEY                
-    
+    ${GetRkey()} => RKEY, VALUE_LOW
+
     ${GetIsOld0()}                  :JMPZ(SZTZ_IsLeafNode)
                                     :JMP(SZTZ_IsIntermediateNode)
 
- SZTZ_IsLeafNode:                                   
+ SZTZ_IsLeafNode:
     ; OldValueHash = Hash0( SIBLING_VALUE_LOW, SIBLING_VALUE_HIGH )
     ${GetSiblingValueLow()} => HASH_LEFT
     ${GetSiblingValueHigh()} => HASH_RIGHT
     $ => SIBLING_VALUE_HASH, HASH_RIGHT :HASH0
+
+    ; VALUE_LOW is RKEY ()
+    ${GetSiblingRkey()} => VALUE_HIGH
+
+
 
     ; OldRoot = LeafNodeHash = Hash1( RKEY, Hash0( SIBLING_VALUE_LOW, SIBLING_VALUE_HIGH ) )
     ${GetSiblingRkey()} => HASH_LEFT
@@ -47,23 +52,12 @@ SZTZ_InitLevel:
     ; Init LEVEL register is set to {1,0,0,0}, and inversely rotate it level%4 times,
     ; so that after level rotations the position of LEVEL becomes {1,0,0,0} again
     ; If level bit 0 is 1, then do 1 inverse rotation (i.e. 3 normal rotations)
-    0x1 => LEVEL    
-    ${GetLevelBit(0)}               :JMPZ(SZTZ_LevelBit1)
-                                    :ROTATE_LEVEL
-                                    :ROTATE_LEVEL
-                                    :ROTATE_LEVEL
-
-SZTZ_LevelBit1:
-
-    ; If level bit 1 is 1, then do 2 inverse rotations (i.e. 2 normal rotations)
-    ${GetLevelBit(1)}               :JMPZ(SZTZ_ClimbTree)
-                                    :ROTATE_LEVEL
-                                    :ROTATE_LEVEL
+    ${GetLevel()} => LEVEL
 
 SZTZ_ClimbTree:
 
     ; If we are at the top of the tree, then goto Get_Latch
-    ${GetTopTree()}                 :JMPZ(SZTZ_Latch)
+    LEVEL                           :JMPZ(SZTZ_Latch)
 
     ; If next key bit is zero, then the sibling hash must be at the right (sibling's key bit is 1)
     ${GetNextKeyBit()} => RKEY_BIT  :JMPZ(SZTZ_SiblingIsRight)
@@ -80,10 +74,8 @@ SZTZ_SiblingIsLeft:
     $ => OLD_ROOT                   :HASH0
 
     ; Update remaining key
-                                    :ROTATE_LEVEL
-                                    :CLIMB_RKEY
-
-                                    :JMP(SZTZ_ClimbTree)
+    LEVEL - 1 => LEVEL
+                                    :CLIMB_RKEY, JMP(SZTZ_ClimbTree)
 
 SZTZ_SiblingIsRight:
 
@@ -97,15 +89,11 @@ SZTZ_SiblingIsRight:
     $ => OLD_ROOT                   :HASH0
 
     ; SZTZ remaining key
-                                    :ROTATE_LEVEL
-                                    :CLIMB_RKEY
-
-                                    :JMP(SZTZ_ClimbTree)
+    LEVEL - 1 => LEVEL
+                                    :CLIMB_RKEY, JMP(SZTZ_ClimbTree)
 
 SZTZ_Latch:
 
     ; At this point consistency is granted: OLD_ROOT, NEW_ROOT, RKEY (complete key), VALUE_LOW, VALUE_HIGH, LEVEL
-                                    :LATCH_SET
-
     ; Return to the main loop
-                                    :JMP(Run)
+                                    :LATCH_SET, JMP(Run)

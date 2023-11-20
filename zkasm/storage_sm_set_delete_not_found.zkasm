@@ -12,7 +12,7 @@ Set_DeleteNotFound:
     ; We have to (pretend to) delete the old leaf node and climb the tree until the top, i.e. until the root
 
     ; Create the a old leaf node for the old value
-    
+
     ; OldValueHash = Hash0( OLD_VALUE_LOW, OLD_VALUE_HIGH )
     ${GetOldValueLow()} => HASH_LEFT
     ${GetOldValueHigh()} => HASH_RIGHT
@@ -26,20 +26,7 @@ SDNF_InitLevel:
 
     ; Init LEVEL register to {1,0,0,0}, and inversely rotate it level%4 times,
     ; so that after level rotations the position of LEVEL becomes {1,0,0,0} again
-    0x01 => LEVEL
-
-    ; If level bit 0 is 1, then do 1 inverse rotation (i.e. 3 normal rotations)
-    ${GetLevelBit(0)}               :JMPZ(SDNF_LevelBit1)
-                                    :ROTATE_LEVEL
-                                    :ROTATE_LEVEL
-                                    :ROTATE_LEVEL
-
-SDNF_LevelBit1:
-
-    ; If level bit 1 is 1, then do 2 inverse rotations (i.e. 2 normal rotations)
-    ${GetLevelBit(1)}               :JMPZ(SDNF_StartNewRoot)
-                                    :ROTATE_LEVEL
-                                    :ROTATE_LEVEL
+    ${GetLevel()} => LEVEL
 
     ; Create the first leaf empty node
 
@@ -50,7 +37,7 @@ SDNF_StartNewRoot:
 SDNF_ClimbTree:
 
     ; If we are at the top of the tree, then go to SDNF_Latch
-    ${GetTopTree()}               :JMPZ(SDNF_Latch)
+    LEVEL                           :JMPZ(SDNF_Latch)
 
     ${GetNextKeyBit()} => RKEY_BIT  :JMPZ(SDNF_SiblingIsRight3)
 
@@ -66,10 +53,8 @@ SDNF_SiblingIsLeft3:
     $ => OLD_ROOT                   :HASH0
 
     ; Update remaining key
-                                    :ROTATE_LEVEL
-                                    :CLIMB_RKEY
-
-                                    :JMP(SDNF_ClimbTree)
+    LEVEL - 1 => LEVEL
+                                    :CLIMB_RKEY, JMP(SDNF_ClimbTree)
 
 SDNF_SiblingIsRight3:
 
@@ -83,15 +68,11 @@ SDNF_SiblingIsRight3:
     $ => OLD_ROOT                   :HASH0
 
     ; Update remaining key
-                                    :ROTATE_LEVEL
-                                    :CLIMB_RKEY
-
-                                    :JMP(SDNF_ClimbTree)
+    LEVEL - 1 => LEVEL
+                                    :CLIMB_RKEY, JMP(SDNF_ClimbTree)
 
 SDNF_Latch:
 
     ; At this point consistency is granted: OLD_ROOT, NEW_ROOT, RKEY (complete key), VALUE_LOW, VALUE_HIGH, LEVEL
-                                    :LATCH_SET
-
     ; Return to the main loop
-                                    :JMP(Run)
+                                    :LATCH_SET, JMP(Run)

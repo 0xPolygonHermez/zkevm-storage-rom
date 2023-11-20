@@ -44,20 +44,7 @@ SDF_InitLevel:
 
     ; Init LEVEL register to {1,0,0,0}, and inversely rotate it level%4 times,
     ; so that after level rotations the position of LEVEL becomes {1,0,0,0} again
-    0x01 => LEVEL
-
-    ; If level bit 0 is 1, then do 1 inverse rotation (i.e. 3 normal rotations)
-    ${GetLevelBit(0)}               :JMPZ(SDF_LevelBit1)
-                                    :ROTATE_LEVEL
-                                    :ROTATE_LEVEL
-                                    :ROTATE_LEVEL
-
-SDF_LevelBit1:
-
-    ; If level bit 1 is 1, then do 2 inverse rotations (i.e. 2 normal rotations)
-    ${GetLevelBit(1)}               :JMPZ(SDF_FirstIntermediateNode)
-                                    :ROTATE_LEVEL
-                                    :ROTATE_LEVEL
+    ${GetLevel()} => LEVEL
 
     ; Create the first intermediate node that joins the old and the new value's leaf nodes
 
@@ -73,11 +60,9 @@ SDF_SiblingIsLeft1:
     OLD_ROOT => HASH_RIGHT
     $ => OLD_ROOT                   :HASH0
 
-                                    :ROTATE_LEVEL
+    LEVEL - 1 => LEVEL
                                     :CLIMB_RKEY
-                                    :CLIMB_SIBLING_RKEY_N
-
-                                    :JMP(SDF_ClimbBranch)
+                                    :CLIMB_SIBLING_RKEY_N, JMP(SDF_ClimbBranch)
 
 SDF_SiblingIsRight1:
 
@@ -87,7 +72,7 @@ SDF_SiblingIsRight1:
     $ => OLD_ROOT                   :HASH0
 
     ; Update remaining keys
-                                    :ROTATE_LEVEL
+    LEVEL - 1 => LEVEL
                                     :CLIMB_RKEY
                                     :CLIMB_SIBLING_RKEY_N
 
@@ -107,11 +92,9 @@ SDF_SiblingIsLeft2:
     $ => OLD_ROOT                   :HASH0
 
     ; Update remaining keys
-                                    :ROTATE_LEVEL
+    LEVEL - 1 => LEVEL
                                     :CLIMB_RKEY
-                                    :CLIMB_SIBLING_RKEY
-
-                                    :JMP(SDF_ClimbBranch)
+                                    :CLIMB_SIBLING_RKEY, JMP(SDF_ClimbBranch)
 
 SDF_SiblingIsRight2:
 
@@ -120,11 +103,9 @@ SDF_SiblingIsRight2:
     0x0 => HASH_RIGHT
     $ => OLD_ROOT                   :HASH0
 
-                                    :ROTATE_LEVEL
+    LEVEL - 1 => LEVEL
                                     :CLIMB_RKEY
-                                    :CLIMB_SIBLING_RKEY
-
-                                    :JMP(SDF_ClimbBranch)
+                                    :CLIMB_SIBLING_RKEY, JMP(SDF_ClimbBranch)
 
 SDF_StartNewRoot:
     ; NewRoot = Hash1( SIBLING_RKEY, SIBLING_VALUE_HASH );
@@ -152,11 +133,9 @@ SDF_SiblingIsLeft3:
     $ => OLD_ROOT                   :HASH0
 
     ; Update remaining keys
-                                    :ROTATE_LEVEL
+    LEVEL - 1 => LEVEL
                                     :CLIMB_RKEY
-                                    :CLIMB_SIBLING_RKEY
-
-                                    :JMP(SDF_ClimbTree)
+                                    :CLIMB_SIBLING_RKEY, JMP(SDF_ClimbTree)
 
 SDF_SiblingIsRight3:
 
@@ -170,16 +149,12 @@ SDF_SiblingIsRight3:
     $ => OLD_ROOT                   :HASH0
 
     ; Update remaining keys
-                                    :ROTATE_LEVEL
+    LEVEL - 1 => LEVEL
                                     :CLIMB_RKEY
-                                    :CLIMB_SIBLING_RKEY
-
-                                    :JMP(SDF_ClimbTree)
+                                    :CLIMB_SIBLING_RKEY, JMP(SDF_ClimbTree)
 
 SDF_Latch:
 
     ; At this point consistency is granted: OLD_ROOT, NEW_ROOT, RKEY (complete key), VALUE_LOW, VALUE_HIGH, LEVEL
-                                    :LATCH_SET
-
     ; Return to the main loop
-                                    :JMP(Run)
+                                    :LATCH_SET, JMP(Run)

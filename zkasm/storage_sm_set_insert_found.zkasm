@@ -40,20 +40,20 @@ SIF_InitLevel:
 
     ; Init LEVEL register to {1,0,0,0}, and inversely rotate it level%4 times,
     ; so that after level rotations the position of LEVEL becomes {1,0,0,0} again
-    0x01 => LEVEL
+    ${GetLevel()} => LEVEL
 
-    ; If level bit 0 is 1, then do 1 inverse rotation (i.e. 3 normal rotations)
-    ${GetLevelBit(0)}               :JMPZ(SIF_LevelBit1)
-                                    :ROTATE_LEVEL
-                                    :ROTATE_LEVEL
-                                    :ROTATE_LEVEL
 
-SIF_LevelBit1:
 
-    ; If level bit 1 is 1, then do 2 inverse rotations (i.e. 2 normal rotations)
-    ${GetLevelBit(1)}               :JMPZ(SIF_FirstIntermediateNode)
-                                    :ROTATE_LEVEL
-                                    :ROTATE_LEVEL
+
+
+
+
+
+
+
+
+
+
 
     ; Create the first intermediate node that joins the old and the new value's leaf nodes
 
@@ -70,7 +70,7 @@ SIF_SiblingIsLeft1:
     $ => NEW_ROOT                   :HASH0
 
     ; Update remaining keys
-                                    :ROTATE_LEVEL
+    LEVEL - 1 => LEVEL
                                     :CLIMB_RKEY
                                     :CLIMB_SIBLING_RKEY_N
 
@@ -84,7 +84,7 @@ SIF_SiblingIsRight1:
     $ => NEW_ROOT                   :HASH0
 
     ; Update remaining keys
-                                    :ROTATE_LEVEL
+    LEVEL - 1 => LEVEL
                                     :CLIMB_RKEY
                                     :CLIMB_SIBLING_RKEY_N
 
@@ -103,7 +103,7 @@ SIF_SiblingIsLeft2:
     $ => NEW_ROOT                   :HASH0
 
     ; Update remaining keys
-                                    :ROTATE_LEVEL
+    LEVEL - 1 => LEVEL
                                     :CLIMB_RKEY
                                     :CLIMB_SIBLING_RKEY
 
@@ -117,7 +117,7 @@ SIF_SiblingIsRight2:
     $ => NEW_ROOT                   :HASH0
 
     ; Update remaining keys
-                                    :ROTATE_LEVEL
+    LEVEL - 1 => LEVEL
                                     :CLIMB_RKEY
                                     :CLIMB_SIBLING_RKEY
 
@@ -132,7 +132,7 @@ SIF_StartOldRoot:
 SIF_ClimbTree:
 
     ; If we are at the top of the tree, then go to SIF_Latch
-    ${GetTopTree()}                 :JMPZ(SIF_Latch)
+    LEVEL                           :JMPZ(SIF_Latch)
 
     ; If next key bit is zero, then the sibling hash must be at the right (sibling's key bit is 1)
     ${GetNextKeyBit()} => RKEY_BIT  :JMPZ(SIF_SiblingIsRight3)
@@ -149,7 +149,7 @@ SIF_SiblingIsLeft3:
     $ => OLD_ROOT                   :HASH0
 
     ; Update remaining keys
-                                    :ROTATE_LEVEL
+    LEVEL - 1 => LEVEL
                                     :CLIMB_RKEY
                                     :CLIMB_SIBLING_RKEY
 
@@ -167,7 +167,7 @@ SIF_SiblingIsRight3:
     $ => OLD_ROOT                   :HASH0
 
     ; Update remaining keys
-                                    :ROTATE_LEVEL
+    LEVEL - 1 => LEVEL
                                     :CLIMB_RKEY
                                     :CLIMB_SIBLING_RKEY
 
@@ -179,4 +179,4 @@ SIF_Latch:
                                     :LATCH_SET
 
     ; Return to the main loop
-                                    :JMP(Run)
+                                    : JMP(Run)
