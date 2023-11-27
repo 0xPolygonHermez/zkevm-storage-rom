@@ -98,7 +98,7 @@ module.exports = async function compile(fileName, ctx) {
     if (isMain) {
         for (let i=0; i<ctx.out.length; i++) {
             if (typeof ctx.out[i].addressLabel !== "undefined") {
-                if (ctx.out[i].jmp || ctx.out[i].jmpz) {
+                if (ctx.out[i].jmp || ctx.out[i].jmpz || ctx.out[i].jmpnz) {
                     if (typeof ctx.definedLabels[ctx.out[i].addressLabel] === "undefined") {
                         error(ctx.out[i].line, `Label: ${ctx.out[i].addressLabel} not defined.`);
                     }

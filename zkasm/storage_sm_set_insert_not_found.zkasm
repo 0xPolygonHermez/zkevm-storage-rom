@@ -16,6 +16,11 @@ Set_InsertNotFound:
     ; NewValueHash = Hash0( VALUE_LOW, VALUE_HIGH )
     ${GetValueLow()} => VALUE_LOW, HASH_LEFT
     ${GetValueHigh()} => VALUE_HIGH, HASH_RIGHT
+
+    ;
+    ; TODO: verify value is not zero.
+    ;
+
     $ => HASH_RIGHT                 :HASH0
 
     ; NewRoot = LeafNodeHash = Hash1( RKEY, Hash0( VALUE_LOW, VALUE_HIGH ) )
@@ -37,7 +42,8 @@ SINF_StartOldRoot:
 SINF_ClimbTree:
 
     ; If we are at the top of the tree, then go to SINF_Latch
-    ${GetTopTree()}               :JMPZ(SINF_Latch)
+    LEVEL                           :JMPZ(SINF_Latch)
+    LEVEL - 1 => LEVEL
 
     ; If next key bit is zero, then the sibling hash must be at the right (sibling's key bit is 1)
     ${GetNextKeyBit()} => RKEY_BIT  :JMPZ(SINF_SiblingIsRight3)
@@ -54,8 +60,7 @@ SINF_SiblingIsLeft3:
     $ => OLD_ROOT                   :HASH0
 
     ; Update remaining key
-    LEVEL - 1 => LEVEL
-                                    :CLIMB_RKEY, JMP(SINF_ClimbTree)
+    $ => RKEY                       :CLIMB_RKEY, JMP(SINF_ClimbTree)
 
 SINF_SiblingIsRight3:
 
@@ -69,8 +74,7 @@ SINF_SiblingIsRight3:
     $ => OLD_ROOT                   :HASH0
 
     ; Update remaining key
-    LEVEL - 1 => LEVEL
-                                    :CLIMB_RKEY, JMP(SINF_ClimbTree)
+    $ => RKEY                       :CLIMB_RKEY, JMP(SINF_ClimbTree)
 
 SINF_Latch:
 

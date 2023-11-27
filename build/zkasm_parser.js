@@ -72,12 +72,12 @@
   }
 */
 var zkasm_parser = (function(){
-var o=function(k,v,o,l){for(o=o||{},l=k.length;l--;o[k[l]]=v);return o},$V0=[1,8],$V1=[1,10],$V2=[1,11],$V3=[1,13],$V4=[1,12],$V5=[1,15],$V6=[1,18],$V7=[1,20],$V8=[1,21],$V9=[1,22],$Va=[1,23],$Vb=[1,24],$Vc=[1,25],$Vd=[1,26],$Ve=[1,27],$Vf=[1,28],$Vg=[1,29],$Vh=[1,30],$Vi=[1,31],$Vj=[1,32],$Vk=[1,33],$Vl=[5,11,13,15,16,17,24,27,29,45,46,47,48,49,50,51,52,53,54,55,56,57],$Vm=[1,40],$Vn=[1,41],$Vo=[1,42],$Vp=[1,43],$Vq=[1,44],$Vr=[1,45],$Vs=[1,46],$Vt=[1,47],$Vu=[1,48],$Vv=[1,49],$Vw=[11,13],$Vx=[11,13,20,22,24],$Vy=[1,56],$Vz=[11,13,20,22,24,25],$VA=[11,13,20,22,24,25,31],$VB=[1,60],$VC=[11,31],$VD=[11,13,31];
+var o=function(k,v,o,l){for(o=o||{},l=k.length;l--;o[k[l]]=v);return o},$V0=[1,8],$V1=[1,10],$V2=[1,11],$V3=[1,13],$V4=[1,12],$V5=[1,15],$V6=[1,18],$V7=[1,20],$V8=[1,21],$V9=[1,22],$Va=[1,23],$Vb=[1,24],$Vc=[1,25],$Vd=[1,26],$Ve=[1,27],$Vf=[1,28],$Vg=[1,29],$Vh=[1,30],$Vi=[5,11,13,15,16,17,24,27,29,47,48,49,50,51,52,53,54,55,56],$Vj=[1,37],$Vk=[1,38],$Vl=[1,39],$Vm=[1,40],$Vn=[1,41],$Vo=[1,42],$Vp=[1,43],$Vq=[1,44],$Vr=[1,45],$Vs=[1,46],$Vt=[1,47],$Vu=[11,13],$Vv=[11,13,20,22,24],$Vw=[1,54],$Vx=[11,13,20,22,24,25],$Vy=[1,58],$Vz=[11,31],$VA=[1,64],$VB=[1,65],$VC=[1,66],$VD=[1,67],$VE=[1,68],$VF=[1,69],$VG=[1,70],$VH=[1,71],$VI=[1,72],$VJ=[1,73],$VK=[1,74],$VL=[1,75],$VM=[1,76],$VN=[11,13,31];
 var parser = {trace: function trace () { },
 yy: {},
-symbols_: {"error":2,"allStatments":3,"statmentList":4,"EOF":5,"statment":6,"step":7,"label":8,"include":9,"command":10,"LF":11,"assignment":12,":":13,"opList":14,"IDENTIFIER":15,"COMMAND":16,"INCLUDE":17,"STRING":18,"inRegsSum":19,"=>":20,"regsList":21,"+":22,"inRegP":23,"-":24,"*":25,"inReg":26,"TAG":27,"reg":28,"NUMBER":29,"**":30,",":31,"op":32,"JMP":33,"(":34,")":35,"JMPZ":36,"HASH0":37,"HASH1":38,"LATCH_SET":39,"LATCH_GET":40,"CLIMB_RKEY":41,"CLIMB_RKEY_N":42,"CLIMB_SIBLING_RKEY":43,"CLIMB_SIBLING_RKEY_N":44,"HASH_LEFT":45,"HASH_RIGHT":46,"OLD_ROOT":47,"NEW_ROOT":48,"VALUE_LOW":49,"VALUE_HIGH":50,"SIBLING_VALUE_HASH":51,"RKEY":52,"SIBLING_RKEY":53,"RKEY_BIT":54,"LEVEL":55,"PC":56,"ROTL_VH":57,"$accept":0,"$end":1},
-terminals_: {2:"error",5:"EOF",11:"LF",13:":",15:"IDENTIFIER",16:"COMMAND",17:"INCLUDE",18:"STRING",20:"=>",22:"+",24:"-",25:"*",27:"TAG",29:"NUMBER",30:"**",31:",",33:"JMP",34:"(",35:")",36:"JMPZ",37:"HASH0",38:"HASH1",39:"LATCH_SET",40:"LATCH_GET",41:"CLIMB_RKEY",42:"CLIMB_RKEY_N",43:"CLIMB_SIBLING_RKEY",44:"CLIMB_SIBLING_RKEY_N",45:"HASH_LEFT",46:"HASH_RIGHT",47:"OLD_ROOT",48:"NEW_ROOT",49:"VALUE_LOW",50:"VALUE_HIGH",51:"SIBLING_VALUE_HASH",52:"RKEY",53:"SIBLING_RKEY",54:"RKEY_BIT",55:"LEVEL",56:"PC",57:"ROTL_VH"},
-productions_: [0,[3,2],[4,2],[4,1],[6,1],[6,1],[6,1],[6,1],[6,1],[7,4],[7,2],[7,3],[8,2],[10,1],[9,2],[12,3],[12,1],[19,3],[19,3],[19,2],[19,1],[23,3],[23,1],[26,1],[26,1],[26,3],[26,1],[21,3],[21,1],[14,3],[14,1],[32,4],[32,4],[32,1],[32,1],[32,1],[32,1],[32,1],[32,1],[32,1],[32,1],[28,1],[28,1],[28,1],[28,1],[28,1],[28,1],[28,1],[28,1],[28,1],[28,1],[28,1],[28,1],[28,1]],
+symbols_: {"error":2,"allStatments":3,"statmentList":4,"EOF":5,"statment":6,"step":7,"label":8,"include":9,"command":10,"LF":11,"assignment":12,":":13,"opList":14,"IDENTIFIER":15,"COMMAND":16,"INCLUDE":17,"STRING":18,"inRegsSum":19,"=>":20,"regsList":21,"+":22,"inRegP":23,"-":24,"*":25,"inReg":26,"TAG":27,"inValidRegs":28,"NUMBER":29,"**":30,",":31,"reg":32,"op":33,"JMP":34,"(":35,")":36,"JMPZ":37,"JMPNZ":38,"HASH0":39,"HASH1":40,"LATCH_SET":41,"LATCH_GET":42,"CLIMB_RKEY":43,"CLIMB_RKEY_N":44,"CLIMB_SIBLING_RKEY":45,"CLIMB_SIBLING_RKEY_N":46,"OLD_ROOT":47,"NEW_ROOT":48,"VALUE_LOW":49,"VALUE_HIGH":50,"SIBLING_VALUE_HASH":51,"RKEY":52,"SIBLING_RKEY":53,"RKEY_BIT":54,"LEVEL":55,"ROTL_VH":56,"HASH_LEFT":57,"HASH_RIGHT":58,"PC":59,"$accept":0,"$end":1},
+terminals_: {2:"error",5:"EOF",11:"LF",13:":",15:"IDENTIFIER",16:"COMMAND",17:"INCLUDE",18:"STRING",20:"=>",22:"+",24:"-",25:"*",27:"TAG",29:"NUMBER",30:"**",31:",",34:"JMP",35:"(",36:")",37:"JMPZ",38:"JMPNZ",39:"HASH0",40:"HASH1",41:"LATCH_SET",42:"LATCH_GET",43:"CLIMB_RKEY",44:"CLIMB_RKEY_N",45:"CLIMB_SIBLING_RKEY",46:"CLIMB_SIBLING_RKEY_N",47:"OLD_ROOT",48:"NEW_ROOT",49:"VALUE_LOW",50:"VALUE_HIGH",51:"SIBLING_VALUE_HASH",52:"RKEY",53:"SIBLING_RKEY",54:"RKEY_BIT",55:"LEVEL",56:"ROTL_VH",57:"HASH_LEFT",58:"HASH_RIGHT",59:"PC"},
+productions_: [0,[3,2],[4,2],[4,1],[6,1],[6,1],[6,1],[6,1],[6,1],[7,4],[7,2],[7,3],[8,2],[10,1],[9,2],[12,3],[12,1],[19,3],[19,3],[19,2],[19,1],[23,3],[23,1],[26,1],[26,1],[26,3],[26,1],[21,3],[21,1],[14,3],[14,1],[33,4],[33,4],[33,4],[33,1],[33,1],[33,1],[33,1],[33,1],[33,1],[33,1],[33,1],[32,1],[32,1],[32,1],[32,1],[32,1],[32,1],[32,1],[32,1],[32,1],[32,1],[32,1],[32,1],[32,1],[28,1],[28,1],[28,1],[28,1],[28,1],[28,1],[28,1],[28,1],[28,1],[28,1]],
 performAction: function anonymous(yytext, yyleng, yylineno, yy, yystate /* action[1] */, $$ /* vstack */, _$ /* lstack */) {
 /* this == yyval */
 
@@ -232,48 +232,53 @@ case 32:
 break;
 case 33:
 
-            this.$ = { hash: 1n, hashType: 0}
+            this.$ = { jmpnz: 1n, addressLabel: $$[$0-1] }
         
 break;
 case 34:
 
-            this.$ = { hash: 1n, hashType: 1}
+            this.$ = { hash: 1n, hashType: 0}
         
 break;
 case 35:
 
-            this.$ = { latchSet: 1n }
+            this.$ = { hash: 1n, hashType: 1}
         
 break;
 case 36:
 
-            this.$ = { latchGet: 1n }
+            this.$ = { latchSet: 1n }
         
 break;
 case 37:
 
-            this.$ = { inFREE: 1n, setRKEY: 1n, climbRkey: 1n, climbSiblingRkey: 0n, climbBitN: 0n }
+            this.$ = { latchGet: 1n }
         
 break;
 case 38:
 
-            this.$ = { inFREE: 1n, setRKEY: 1n, climbRkey: 1n, climbSiblingRkey: 0n, climbBitN: 1n }
+            this.$ = { climbRkey: 1n, climbSiblingRkey: 0n, climbBitN: 0n }
         
 break;
 case 39:
 
-            this.$ = { inFREE: 1n, setSIBLING_RKEY: 1n, climbRkey: 0n, climbSiblingRkey: 1n, climbBitN: 0n }
+            this.$ = { climbRkey: 1n, climbSiblingRkey: 0n, climbBitN: 1n }
         
 break;
 case 40:
 
-            this.$ = { inFREE: 1n, setSIBLING_RKEY: 1n, climbRkey: 0n, climbSiblingRkey: 1n, climbBitN: 1n }
+            this.$ = { climbRkey: 0n, climbSiblingRkey: 1n, climbBitN: 0n }
+        
+break;
+case 41:
+
+            this.$ = { climbRkey: 0n, climbSiblingRkey: 1n, climbBitN: 1n }
         
 break;
 }
 },
-table: [{3:1,4:2,6:3,7:4,8:5,9:6,10:7,11:$V0,12:9,13:$V1,15:$V2,16:$V3,17:$V4,19:14,23:16,24:$V5,26:17,27:$V6,28:19,29:$V7,45:$V8,46:$V9,47:$Va,48:$Vb,49:$Vc,50:$Vd,51:$Ve,52:$Vf,53:$Vg,54:$Vh,55:$Vi,56:$Vj,57:$Vk},{1:[3]},{5:[1,34],6:35,7:4,8:5,9:6,10:7,11:$V0,12:9,13:$V1,15:$V2,16:$V3,17:$V4,19:14,23:16,24:$V5,26:17,27:$V6,28:19,29:$V7,45:$V8,46:$V9,47:$Va,48:$Vb,49:$Vc,50:$Vd,51:$Ve,52:$Vf,53:$Vg,54:$Vh,55:$Vi,56:$Vj,57:$Vk},o($Vl,[2,3]),o($Vl,[2,4]),o($Vl,[2,5]),o($Vl,[2,6]),o($Vl,[2,7]),o($Vl,[2,8]),{11:[1,37],13:[1,36]},{14:38,32:39,33:$Vm,36:$Vn,37:$Vo,38:$Vp,39:$Vq,40:$Vr,41:$Vs,42:$Vt,43:$Vu,44:$Vv},{13:[1,50]},{18:[1,51]},o($Vl,[2,13]),o($Vw,[2,16],{20:[1,52],22:[1,53],24:[1,54]}),{23:55,26:17,27:$V6,28:19,29:$V7,45:$V8,46:$V9,47:$Va,48:$Vb,49:$Vc,50:$Vd,51:$Ve,52:$Vf,53:$Vg,54:$Vh,55:$Vi,56:$Vj,57:$Vk},o($Vx,[2,20],{25:$Vy}),o($Vz,[2,22]),o($Vz,[2,23]),o($Vz,[2,24]),o($Vz,[2,26],{30:[1,57]}),o($VA,[2,41]),o($VA,[2,42]),o($VA,[2,43]),o($VA,[2,44]),o($VA,[2,45]),o($VA,[2,46]),o($VA,[2,47]),o($VA,[2,48]),o($VA,[2,49]),o($VA,[2,50]),o($VA,[2,51]),o($VA,[2,52]),o($VA,[2,53]),{1:[2,1]},o($Vl,[2,2]),{14:58,32:39,33:$Vm,36:$Vn,37:$Vo,38:$Vp,39:$Vq,40:$Vr,41:$Vs,42:$Vt,43:$Vu,44:$Vv},o($Vl,[2,10]),{11:[1,59],31:$VB},o($VC,[2,30]),{34:[1,61]},{34:[1,62]},o($VC,[2,33]),o($VC,[2,34]),o($VC,[2,35]),o($VC,[2,36]),o($VC,[2,37]),o($VC,[2,38]),o($VC,[2,39]),o($VC,[2,40]),o($Vl,[2,12]),o($Vl,[2,14]),{21:63,28:64,45:$V8,46:$V9,47:$Va,48:$Vb,49:$Vc,50:$Vd,51:$Ve,52:$Vf,53:$Vg,54:$Vh,55:$Vi,56:$Vj,57:$Vk},{23:65,26:17,27:$V6,28:19,29:$V7,45:$V8,46:$V9,47:$Va,48:$Vb,49:$Vc,50:$Vd,51:$Ve,52:$Vf,53:$Vg,54:$Vh,55:$Vi,56:$Vj,57:$Vk},{23:66,26:17,27:$V6,28:19,29:$V7,45:$V8,46:$V9,47:$Va,48:$Vb,49:$Vc,50:$Vd,51:$Ve,52:$Vf,53:$Vg,54:$Vh,55:$Vi,56:$Vj,57:$Vk},o($Vx,[2,19],{25:$Vy}),{26:67,27:$V6,28:19,29:$V7,45:$V8,46:$V9,47:$Va,48:$Vb,49:$Vc,50:$Vd,51:$Ve,52:$Vf,53:$Vg,54:$Vh,55:$Vi,56:$Vj,57:$Vk},{29:[1,68]},{11:[1,69],31:$VB},o($Vl,[2,11]),{32:70,33:$Vm,36:$Vn,37:$Vo,38:$Vp,39:$Vq,40:$Vr,41:$Vs,42:$Vt,43:$Vu,44:$Vv},{15:[1,71]},{15:[1,72]},o($Vw,[2,15],{31:[1,73]}),o($VD,[2,28]),o($Vx,[2,17],{25:$Vy}),o($Vx,[2,18],{25:$Vy}),o($Vz,[2,21]),o($Vz,[2,25]),o($Vl,[2,9]),o($VC,[2,29]),{35:[1,74]},{35:[1,75]},{28:76,45:$V8,46:$V9,47:$Va,48:$Vb,49:$Vc,50:$Vd,51:$Ve,52:$Vf,53:$Vg,54:$Vh,55:$Vi,56:$Vj,57:$Vk},o($VC,[2,31]),o($VC,[2,32]),o($VD,[2,27])],
-defaultActions: {34:[2,1]},
+table: [{3:1,4:2,6:3,7:4,8:5,9:6,10:7,11:$V0,12:9,13:$V1,15:$V2,16:$V3,17:$V4,19:14,23:16,24:$V5,26:17,27:$V6,28:19,29:$V7,47:$V8,48:$V9,49:$Va,50:$Vb,51:$Vc,52:$Vd,53:$Ve,54:$Vf,55:$Vg,56:$Vh},{1:[3]},{5:[1,31],6:32,7:4,8:5,9:6,10:7,11:$V0,12:9,13:$V1,15:$V2,16:$V3,17:$V4,19:14,23:16,24:$V5,26:17,27:$V6,28:19,29:$V7,47:$V8,48:$V9,49:$Va,50:$Vb,51:$Vc,52:$Vd,53:$Ve,54:$Vf,55:$Vg,56:$Vh},o($Vi,[2,3]),o($Vi,[2,4]),o($Vi,[2,5]),o($Vi,[2,6]),o($Vi,[2,7]),o($Vi,[2,8]),{11:[1,34],13:[1,33]},{14:35,33:36,34:$Vj,37:$Vk,38:$Vl,39:$Vm,40:$Vn,41:$Vo,42:$Vp,43:$Vq,44:$Vr,45:$Vs,46:$Vt},{13:[1,48]},{18:[1,49]},o($Vi,[2,13]),o($Vu,[2,16],{20:[1,50],22:[1,51],24:[1,52]}),{23:53,26:17,27:$V6,28:19,29:$V7,47:$V8,48:$V9,49:$Va,50:$Vb,51:$Vc,52:$Vd,53:$Ve,54:$Vf,55:$Vg,56:$Vh},o($Vv,[2,20],{25:$Vw}),o($Vx,[2,22]),o($Vx,[2,23]),o($Vx,[2,24]),o($Vx,[2,26],{30:[1,55]}),o($Vx,[2,55]),o($Vx,[2,56]),o($Vx,[2,57]),o($Vx,[2,58]),o($Vx,[2,59]),o($Vx,[2,60]),o($Vx,[2,61]),o($Vx,[2,62]),o($Vx,[2,63]),o($Vx,[2,64]),{1:[2,1]},o($Vi,[2,2]),{14:56,33:36,34:$Vj,37:$Vk,38:$Vl,39:$Vm,40:$Vn,41:$Vo,42:$Vp,43:$Vq,44:$Vr,45:$Vs,46:$Vt},o($Vi,[2,10]),{11:[1,57],31:$Vy},o($Vz,[2,30]),{35:[1,59]},{35:[1,60]},{35:[1,61]},o($Vz,[2,34]),o($Vz,[2,35]),o($Vz,[2,36]),o($Vz,[2,37]),o($Vz,[2,38]),o($Vz,[2,39]),o($Vz,[2,40]),o($Vz,[2,41]),o($Vi,[2,12]),o($Vi,[2,14]),{21:62,32:63,47:$VA,48:$VB,49:$VC,50:$VD,51:$VE,52:$VF,53:$VG,54:$VH,55:$VI,56:$VJ,57:$VK,58:$VL,59:$VM},{23:77,26:17,27:$V6,28:19,29:$V7,47:$V8,48:$V9,49:$Va,50:$Vb,51:$Vc,52:$Vd,53:$Ve,54:$Vf,55:$Vg,56:$Vh},{23:78,26:17,27:$V6,28:19,29:$V7,47:$V8,48:$V9,49:$Va,50:$Vb,51:$Vc,52:$Vd,53:$Ve,54:$Vf,55:$Vg,56:$Vh},o($Vv,[2,19],{25:$Vw}),{26:79,27:$V6,28:19,29:$V7,47:$V8,48:$V9,49:$Va,50:$Vb,51:$Vc,52:$Vd,53:$Ve,54:$Vf,55:$Vg,56:$Vh},{29:[1,80]},{11:[1,81],31:$Vy},o($Vi,[2,11]),{33:82,34:$Vj,37:$Vk,38:$Vl,39:$Vm,40:$Vn,41:$Vo,42:$Vp,43:$Vq,44:$Vr,45:$Vs,46:$Vt},{15:[1,83]},{15:[1,84]},{15:[1,85]},o($Vu,[2,15],{31:[1,86]}),o($VN,[2,28]),o($VN,[2,42]),o($VN,[2,43]),o($VN,[2,44]),o($VN,[2,45]),o($VN,[2,46]),o($VN,[2,47]),o($VN,[2,48]),o($VN,[2,49]),o($VN,[2,50]),o($VN,[2,51]),o($VN,[2,52]),o($VN,[2,53]),o($VN,[2,54]),o($Vv,[2,17],{25:$Vw}),o($Vv,[2,18],{25:$Vw}),o($Vx,[2,21]),o($Vx,[2,25]),o($Vi,[2,9]),o($Vz,[2,29]),{36:[1,87]},{36:[1,88]},{36:[1,89]},{32:90,47:$VA,48:$VB,49:$VC,50:$VD,51:$VE,52:$VF,53:$VG,54:$VH,55:$VI,56:$VJ,57:$VK,58:$VL,59:$VM},o($Vz,[2,31]),o($Vz,[2,32]),o($Vz,[2,33]),o($VN,[2,27])],
+defaultActions: {31:[2,1]},
 parseError: function parseError (str, hash) {
     if (hash.recoverable) {
         this.trace(str);
@@ -764,9 +769,9 @@ case 4: return "LF";
 break;
 case 5: /* console.log("Empty spaces"); */ 
 break;
-case 6: return 45; 
+case 6: return 57; 
 break;
-case 7: return 46; 
+case 7: return 58; 
 break;
 case 8: return 47; 
 break;
@@ -788,66 +793,68 @@ case 16: return 54;
 break;
 case 17: return 55; 
 break;
-case 18: return 56; 
+case 18: return 59; 
 break;
-case 19: return 37 
+case 19: return 39 
 break;
-case 20: return 38 
+case 20: return 40 
 break;
-case 21: return 39 
+case 21: return 41 
 break;
-case 22: return 40 
+case 22: return 42 
 break;
-case 23: return 41 
+case 23: return 43 
 break;
-case 24: return 42 
+case 24: return 44 
 break;
-case 25: return 43 
+case 25: return 45 
 break;
-case 26: return 44 
+case 26: return 46 
 break;
-case 27: return 36 
+case 27: return 38 
 break;
-case 28: return 33 
+case 28: return 37 
 break;
-case 29: return 57 
+case 29: return 34 
 break;
-case 30: return 17 
+case 30: return 56 
 break;
-case 31: yy_.yytext = yy_.yytext.slice(1,-1); return 18; 
+case 31: return 17 
 break;
-case 32: return 15; 
+case 32: yy_.yytext = yy_.yytext.slice(1,-1); return 18; 
 break;
-case 33: return 13; 
+case 33: return 15; 
 break;
-case 34: return 31
+case 34: return 13; 
 break;
-case 35: return 34
+case 35: return 31
 break;
 case 36: return 35
 break;
-case 37: return '++'
+case 37: return 36
 break;
-case 38: return '--'
+case 38: return '++'
 break;
-case 39: return 22
+case 39: return '--'
 break;
-case 40: return 24
+case 40: return 22
 break;
-case 41: return 30
+case 41: return 24
 break;
-case 42: return 25
+case 42: return 30
 break;
-case 43: return 20 
+case 43: return 25
 break;
-case 44: return 5; 
+case 44: return 20 
 break;
-case 45: /* console.log("INVALID: " + yy_.yytext); */ return 'INVALID'; 
+case 45: return 5; 
+break;
+case 46: /* console.log("INVALID: " + yy_.yytext); */ return 'INVALID'; 
 break;
 }
 },
-rules: [/^(?:;[^\n\r]*)/,/^(?:(0x[0-9A-Fa-f][0-9A-Fa-f_]*)|([0-9][0-9_]*))/,/^(?:\$\$\{[^\}]*\})/,/^(?:(\$(\{[^\}]*\})?))/,/^(?:[\r\n]+)/,/^(?:[ \t]+)/,/^(?:HASH_LEFT\b)/,/^(?:HASH_RIGHT\b)/,/^(?:OLD_ROOT\b)/,/^(?:NEW_ROOT\b)/,/^(?:VALUE_LOW\b)/,/^(?:VALUE_HIGH\b)/,/^(?:SIBLING_VALUE_HASH\b)/,/^(?:FREE\b)/,/^(?:RKEY\b)/,/^(?:SIBLING_RKEY\b)/,/^(?:RKEY_BIT\b)/,/^(?:LEVEL\b)/,/^(?:PC\b)/,/^(?:HASH0\b)/,/^(?:HASH1\b)/,/^(?:LATCH_SET\b)/,/^(?:LATCH_GET\b)/,/^(?:CLIMB_RKEY\b)/,/^(?:CLIMB_RKEY_N\b)/,/^(?:CLIMB_SIBLING_RKEY\b)/,/^(?:CLIMB_SIBLING_RKEY_N\b)/,/^(?:JMPZ\b)/,/^(?:JMP\b)/,/^(?:ROTL_VH\b)/,/^(?:INCLUDE\b)/,/^(?:"[^"]+")/,/^(?:[a-zA-Z_][a-zA-Z$_0-9\+\.\>\<\=\-\!]*)/,/^(?::)/,/^(?:,)/,/^(?:\()/,/^(?:\))/,/^(?:\+\+)/,/^(?:--)/,/^(?:\+)/,/^(?:-)/,/^(?:\*\*)/,/^(?:\*)/,/^(?:=>)/,/^(?:$)/,/^(?:.)/],
-conditions: {"INITIAL":{"rules":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45],"inclusive":true}}
+rules: [/^(?:;[^\n\r]*)/,/^(?:(0x[0-9A-Fa-f][0-9A-Fa-f_]*)|([0-9][0-9_]*))/,/^(?:\$\$\{[^\}]*\})/,/^(?:(\$(\{[^\}]*\})?))/,/^(?:[\r\n]+)/,/^(?:[ \t]+)/,/^(?:HASH_LEFT\b)/,/^(?:HASH_RIGHT\b)/,/^(?:OLD_ROOT\b)/,/^(?:NEW_ROOT\b)/,/^(?:VALUE_LOW\b)/,/^(?:VALUE_HIGH\b)/,/^(?:SIBLING_VALUE_HASH\b)/,/^(?:FREE\b)/,/^(?:RKEY\b)/,/^(?:SIBLING_RKEY\b)/,/^(?:RKEY_BIT\b)/,/^(?:LEVEL\b)/,/^(?:PC\b)/,/^(?:HASH0\b)/,/^(?:HASH1\b)/,/^(?:LATCH_SET\b)/,/^(?:LATCH_GET\b)/,/^(?:CLIMB_RKEY\b)/,/^(?:CLIMB_RKEY_N\b)/,/^(?:CLIMB_SIBLING_RKEY\b)/,/^(?:CLIMB_SIBLING_RKEY_N\b)/,/^(?:JMPNZ\b)/,/^(?:JMPZ\b)/,/^(?:JMP\b)/,/^(?:ROTL_VH\b)/,/^(?:INCLUDE\b)/,/^(?:"[^"]+")/,/^(?:[a-zA-Z_][a-zA-Z$_0-9\+\.\>\<\=\-\!]*)/,/^(?::)/,/^(?:,)/,/^(?:\()/,/^(?:\))/,/^(?:\+\+)/,/^(?:--)/,/^(?:\+)/,/^(?:-)/,/^(?:\*\*)/,/^(?:\*)/,/^(?:=>)/,/^(?:$)/,/^(?:.)/],
+conditions: {"INITIAL":{"rules":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46],"inclusive":true}}
 });
 return lexer;
 })();

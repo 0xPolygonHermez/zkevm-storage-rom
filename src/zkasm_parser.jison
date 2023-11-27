@@ -28,6 +28,7 @@ CLIMB_RKEY              { return 'CLIMB_RKEY' }
 CLIMB_RKEY_N            { return 'CLIMB_RKEY_N' }
 CLIMB_SIBLING_RKEY      { return 'CLIMB_SIBLING_RKEY' }
 CLIMB_SIBLING_RKEY_N    { return 'CLIMB_SIBLING_RKEY_N' }
+JMPNZ                   { return 'JMPNZ' }
 JMPZ                    { return 'JMPZ' }
 JMP                     { return 'JMP' }
 ROTL_VH                 { return 'ROTL_VH' }
@@ -198,7 +199,7 @@ inReg
         {
             $$ = {type: 'TAG' , tag: $1}
         }
-    | reg
+    | inValidRegs
         {
             $$ = {type: 'REG' , reg: $1}
         }
@@ -245,6 +246,10 @@ op
         {
             $$ = { jmpz: 1n, addressLabel: $3 }
         }
+    | JMPNZ '(' IDENTIFIER ')'
+        {
+            $$ = { jmpnz: 1n, addressLabel: $3 }
+        }
     | HASH0
         {
             $$ = { hash: 1n, hashType: 0}
@@ -263,27 +268,25 @@ op
         }
     | CLIMB_RKEY
         {
-            $$ = { inFREE: 1n, setRKEY: 1n, climbRkey: 1n, climbSiblingRkey: 0n, climbBitN: 0n }
+            $$ = { climbRkey: 1n, climbSiblingRkey: 0n, climbBitN: 0n }
         }
     | CLIMB_RKEY_N
         {
-            $$ = { inFREE: 1n, setRKEY: 1n, climbRkey: 1n, climbSiblingRkey: 0n, climbBitN: 1n }
+            $$ = { climbRkey: 1n, climbSiblingRkey: 0n, climbBitN: 1n }
         }
     | CLIMB_SIBLING_RKEY
         {
-            $$ = { inFREE: 1n, setSIBLING_RKEY: 1n, climbRkey: 0n, climbSiblingRkey: 1n, climbBitN: 0n }
+            $$ = { climbRkey: 0n, climbSiblingRkey: 1n, climbBitN: 0n }
         }
     | CLIMB_SIBLING_RKEY_N
         {
-            $$ = { inFREE: 1n, setSIBLING_RKEY: 1n, climbRkey: 0n, climbSiblingRkey: 1n, climbBitN: 1n }
+            $$ = { climbRkey: 0n, climbSiblingRkey: 1n, climbBitN: 1n }
         }
     ;
 
 
 reg
-    : HASH_LEFT
-    | HASH_RIGHT
-    | OLD_ROOT
+    : OLD_ROOT
     | NEW_ROOT
     | VALUE_LOW
     | VALUE_HIGH
@@ -292,6 +295,21 @@ reg
     | SIBLING_RKEY
     | RKEY_BIT
     | LEVEL
+    | ROTL_VH
+    | HASH_LEFT
+    | HASH_RIGHT
     | PC
+    ;
+
+inValidRegs
+    : OLD_ROOT
+    | NEW_ROOT
+    | VALUE_LOW
+    | VALUE_HIGH
+    | SIBLING_VALUE_HASH
+    | RKEY
+    | SIBLING_RKEY
+    | RKEY_BIT
+    | LEVEL
     | ROTL_VH
     ;
