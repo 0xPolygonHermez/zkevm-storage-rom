@@ -4,13 +4,13 @@ Run:
     0 => HASH_LEFT, HASH_RIGHT, OLD_ROOT, NEW_ROOT, VALUE_LOW, VALUE_HIGH, SIBLING_VALUE_HASH, RKEY, SIBLING_RKEY, RKEY_BIT, LEVEL
 
     ${isValueZero()}                            :JMPNZ(ValueIsZero)
-    ${GetValueLow()} => VALUE_LOW, VALUE_HIGH   :JMPNZ(ValueLowIsNonZero)
+    ${GetValueLow()} => VALUE_LOW,VALUE_HIGH    :JMPNZ(ValueLowIsNonZero)
     ROTL_VH => VALUE_HIGH                       :JMPNZ(ValueLowIsNonZero)
     ROTL_VH => VALUE_HIGH                       :JMPNZ(ValueLowIsNonZero)
     ROTL_VH => VALUE_HIGH                       :JMPNZ(ValueLowIsNonZero)
 
 
-    ${GetValueHigh()} => VALUE_HIGH,NEW_ROOT    :JMPNZ(ValueHighIsNonZero)
+    ${GetValueHigh()} => VALUE_HIGH,NEW_ROOT    :JMPNZ(ValueIsNonZero)
     ROTL_VH => VALUE_HIGH                       :JMPNZ(ValueHighIsNonZero)
     ROTL_VH => VALUE_HIGH                       :JMPNZ(ValueHighIsNonZero)
     ROTL_VH => VALUE_HIGH                       :JMPNZ(ValueHighIsNonZero)
@@ -20,6 +20,7 @@ ValueLowIsNonZero:
     ${GetValueHigh()} => VALUE_HIGH             :JMP(ValueIsNonZero)
 
 ValueHighIsNonZero:
+    ; Restore VALUE_HIGH verified
     NEW_ROOT => VALUE_HIGH
     0 => NEW_ROOT
 
