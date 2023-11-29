@@ -39,7 +39,9 @@ SDNF_InitLevel:
     LEVEL                           :JMPZ(SDNF_Latch)
     LEVEL - 1 => LEVEL
 
-    ; !!!!
+    ; Use the sibling childs to be trust that this node is and intermediate node otherwise
+    ; a MAP said it's a intermediate node but really was a leaf node. In case of leaf node
+    ; need to climb up the leaf node, if it isn't done the result tree was invalid.
     ${GetSiblingLeftChildHash()} => HASH_LEFT
     ${GetSiblingRightChildHash()} => HASH_RIGHT
     $ => HASH_LEFT, HASH_RIGHT :HASH0

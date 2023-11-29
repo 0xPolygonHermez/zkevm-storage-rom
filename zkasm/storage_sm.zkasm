@@ -10,10 +10,10 @@ Run:
     ROTL_VH => VALUE_HIGH                       :JMPNZ(ValueLowIsNonZero)
 
 
-    ${GetValueHigh()} => VALUE_HIGH,NEW_ROOT    :JMPNZ(ValueIsNonZero)
-    ROTL_VH => VALUE_HIGH                       :JMPNZ(ValueIsNonZero)
-    ROTL_VH => VALUE_HIGH                       :JMPNZ(ValueIsNonZero)
-    ROTL_VH => VALUE_HIGH                       :JMPNZ(ValueIsNonZero)
+    ${GetValueHigh()} => VALUE_HIGH,NEW_ROOT    :JMPNZ(ValueHighIsNonZero)
+    ROTL_VH => VALUE_HIGH                       :JMPNZ(ValueHighIsNonZero)
+    ROTL_VH => VALUE_HIGH                       :JMPNZ(ValueHighIsNonZero)
+    ROTL_VH => VALUE_HIGH                       :JMPNZ(ValueHighIsNonZero)
                                                 :JMP(ValueIsZero)
 
 ValueLowIsNonZero:
