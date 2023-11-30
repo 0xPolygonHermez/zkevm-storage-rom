@@ -14,7 +14,7 @@ Run:
     ROTL_VH => VALUE_HIGH                       :JMPNZ(ValueHighIsNonZero)
     ROTL_VH => VALUE_HIGH                       :JMPNZ(ValueHighIsNonZero)
     ROTL_VH => VALUE_HIGH                       :JMPNZ(ValueHighIsNonZero)
-                                                :JMP(ValueIsZero)
+                                                :JMP(AssertFails)
 
 ValueLowIsNonZero:
     ${GetValueHigh()} => VALUE_HIGH             :JMP(ValueIsNonZero)

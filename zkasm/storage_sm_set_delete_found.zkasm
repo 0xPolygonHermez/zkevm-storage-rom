@@ -117,9 +117,9 @@ SDF_StartNewRoot:
     LEVEL - 1 => LEVEL
 
     ${GetSiblingHash()} => HASH_LEFT, HASH_RIGHT, VALUE_HIGH :JMPNZ(SDF_SiblingHashIsNotZero) ;VH[0]
-    ROTL_VH => VALUE_HIGH           :JMPZ(SDF_SiblingHashIsNotZero) ; VH[3]
-    ROTL_VH => VALUE_HIGH           :JMPZ(SDF_SiblingHashIsNotZero) ; VH[2]
-    ROTL_VH => VALUE_HIGH           :JMPZ(SDF_SiblingHashIsNotZero) ; VH[1]
+    ROTL_VH => VALUE_HIGH           :JMPNZ(SDF_SiblingHashIsNotZero) ; VH[3]
+    ROTL_VH => VALUE_HIGH           :JMPNZ(SDF_SiblingHashIsNotZero) ; VH[2]
+    ROTL_VH => VALUE_HIGH           :JMPNZ(SDF_SiblingHashIsNotZero) ; VH[1]
                                     :JMP(AssertFails)
 SDF_SiblingHashIsNotZero:
 

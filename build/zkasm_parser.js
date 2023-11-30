@@ -222,57 +222,57 @@ case 29:
 break;
 case 31:
 
-            this.$ = { jmp: 1n, addressLabel: $$[$0-1] }
+            this.$ = { jmp: 1, addressLabel: $$[$0-1] }
         
 break;
 case 32:
 
-            this.$ = { jmpz: 1n, addressLabel: $$[$0-1] }
+            this.$ = { jmpz: 1, addressLabel: $$[$0-1] }
         
 break;
 case 33:
 
-            this.$ = { jmpnz: 1n, addressLabel: $$[$0-1] }
+            this.$ = { jmpnz: 1, addressLabel: $$[$0-1] }
         
 break;
 case 34:
 
-            this.$ = { hash: 1n, hashType: 0}
+            this.$ = { hash: 1, hashType: 0}
         
 break;
 case 35:
 
-            this.$ = { hash: 1n, hashType: 1}
+            this.$ = { hash: 1, hashType: 1}
         
 break;
 case 36:
 
-            this.$ = { latchSet: 1n }
+            this.$ = { latchSet: 1 }
         
 break;
 case 37:
 
-            this.$ = { latchGet: 1n }
+            this.$ = { latchGet: 1 }
         
 break;
 case 38:
 
-            this.$ = { climbRkey: 1n, climbSiblingRkey: 0n, climbBitN: 0n }
+            this.$ = { climbRkey: 1, climbSiblingRkey: 0, climbBitN: 0 }
         
 break;
 case 39:
 
-            this.$ = { climbRkey: 1n, climbSiblingRkey: 0n, climbBitN: 1n }
+            this.$ = { climbRkey: 1, climbSiblingRkey: 0, climbBitN: 1 }
         
 break;
 case 40:
 
-            this.$ = { climbRkey: 0n, climbSiblingRkey: 1n, climbBitN: 0n }
+            this.$ = { climbRkey: 0, climbSiblingRkey: 1, climbBitN: 0 }
         
 break;
 case 41:
 
-            this.$ = { climbRkey: 0n, climbSiblingRkey: 1n, climbBitN: 1n }
+            this.$ = { climbRkey: 0, climbSiblingRkey: 1, climbBitN: 1 }
         
 break;
 }

@@ -145,15 +145,19 @@ function processAssignmentIn(input) {
     let E1, E2;
     if (input.type == "TAG") {
         res.freeInTag = input.tag ? command_parser.parse(input.tag) : { op: ""};
-        res.inFREE = 1n;
+        res.inFREE = 1;
         return res;
     }
     if (input.type == "REG") {
-        res["in"+ input.reg] = 1n;
+        res["in"+ input.reg] = 1;
         return res;
     }
     if (input.type == "CONST") {
-        res.CONST = BigInt(input.const);
+        const value = BigInt(input.const);
+        if (value >= (2n ** 32n) || value < -(2n ** 32n)) {
+            throw new Error(`Value ${value} too big`);
+        }
+        res.CONST = Number(value);
         return res;
     }
     if (input.type == "exp") {

@@ -240,47 +240,47 @@ opList
 op
     : JMP '(' IDENTIFIER ')'
         {
-            $$ = { jmp: 1n, addressLabel: $3 }
+            $$ = { jmp: 1, addressLabel: $3 }
         }
     | JMPZ '(' IDENTIFIER ')'
         {
-            $$ = { jmpz: 1n, addressLabel: $3 }
+            $$ = { jmpz: 1, addressLabel: $3 }
         }
     | JMPNZ '(' IDENTIFIER ')'
         {
-            $$ = { jmpnz: 1n, addressLabel: $3 }
+            $$ = { jmpnz: 1, addressLabel: $3 }
         }
     | HASH0
         {
-            $$ = { hash: 1n, hashType: 0}
+            $$ = { hash: 1, hashType: 0}
         }
     | HASH1
         {
-            $$ = { hash: 1n, hashType: 1}
+            $$ = { hash: 1, hashType: 1}
         }
     | LATCH_SET
         {
-            $$ = { latchSet: 1n }
+            $$ = { latchSet: 1 }
         }
     | LATCH_GET
         {
-            $$ = { latchGet: 1n }
+            $$ = { latchGet: 1 }
         }
     | CLIMB_RKEY
         {
-            $$ = { climbRkey: 1n, climbSiblingRkey: 0n, climbBitN: 0n }
+            $$ = { climbRkey: 1, climbSiblingRkey: 0, climbBitN: 0 }
         }
     | CLIMB_RKEY_N
         {
-            $$ = { climbRkey: 1n, climbSiblingRkey: 0n, climbBitN: 1n }
+            $$ = { climbRkey: 1, climbSiblingRkey: 0, climbBitN: 1 }
         }
     | CLIMB_SIBLING_RKEY
         {
-            $$ = { climbRkey: 0n, climbSiblingRkey: 1n, climbBitN: 0n }
+            $$ = { climbRkey: 0, climbSiblingRkey: 1, climbBitN: 0 }
         }
     | CLIMB_SIBLING_RKEY_N
         {
-            $$ = { climbRkey: 0n, climbSiblingRkey: 1n, climbBitN: 1n }
+            $$ = { climbRkey: 0, climbSiblingRkey: 1, climbBitN: 1 }
         }
     ;
 
