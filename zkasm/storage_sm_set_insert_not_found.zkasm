@@ -11,15 +11,13 @@ Set_InsertNotFound:
     ; We have to create a new leaf node (new value's) at the point when the key diverges with any other key
     ; and then, climb the tree until the top, i.e. until the root
 
+    ; At this point, value isn't zero, it's verified in storage_sm.zkasm
+
     ; Create the a new leaf nodes for the new value
 
     ; NewValueHash = Hash0( VALUE_LOW, VALUE_HIGH )
     ${GetValueLow()} => VALUE_LOW, HASH_LEFT
     ${GetValueHigh()} => VALUE_HIGH, HASH_RIGHT
-
-    ;
-    ; TODO: verify value is not zero.
-    ;
 
     $ => HASH_RIGHT                 :HASH0
 

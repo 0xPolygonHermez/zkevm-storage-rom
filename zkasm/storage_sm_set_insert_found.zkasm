@@ -17,15 +17,12 @@ Set_InsertFound:
 
     ; Create the 2 new leaf nodes: for the old found value, and for the new value
 
+    ; At this point, value isn't zero, it's verified in storage_sm.zkasm
 
-
-;   TODO: VALUE must be different zero
-
-
+    ; FUTURE OPTIMIZATION Calculate SIBLING_VALUE_HASH it isn't necessary, could get
+    ; directly hash of value, because the important point is validate rkey.
 
     ; OldValueHash = Hash0( SIBLING_VALUE_LOW, SIBLING_VALUE_HIGH )
-    ; TODO: OPTIMIZATION SIBLING_VALUE_HASH no es necesari calcular el hash !!!!
-    ; dels value.
     ${GetSiblingValueLow()} => HASH_LEFT
     ${GetSiblingValueHigh()} => HASH_RIGHT
     $ => SIBLING_VALUE_HASH, HASH_RIGHT :HASH0
