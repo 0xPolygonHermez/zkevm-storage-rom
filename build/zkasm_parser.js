@@ -222,17 +222,17 @@ case 29:
 break;
 case 31:
 
-            this.$ = { jmp: 1, addressLabel: $$[$0-1] }
+            this.$ = { jmp: 1, jmpAddressLabel: $$[$0-1] }
         
 break;
 case 32:
 
-            this.$ = { jmpz: 1, addressLabel: $$[$0-1] }
+            this.$ = { jmpz: 1, jmpAddressLabel: $$[$0-1] }
         
 break;
 case 33:
 
-            this.$ = { jmpnz: 1, addressLabel: $$[$0-1] }
+            this.$ = { jmpnz: 1, jmpAddressLabel: $$[$0-1] }
         
 break;
 case 34:

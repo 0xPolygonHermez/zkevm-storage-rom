@@ -240,15 +240,15 @@ opList
 op
     : JMP '(' IDENTIFIER ')'
         {
-            $$ = { jmp: 1, addressLabel: $3 }
+            $$ = { jmp: 1, jmpAddressLabel: $3 }
         }
     | JMPZ '(' IDENTIFIER ')'
         {
-            $$ = { jmpz: 1, addressLabel: $3 }
+            $$ = { jmpz: 1, jmpAddressLabel: $3 }
         }
     | JMPNZ '(' IDENTIFIER ')'
         {
-            $$ = { jmpnz: 1, addressLabel: $3 }
+            $$ = { jmpnz: 1, jmpAddressLabel: $3 }
         }
     | HASH0
         {

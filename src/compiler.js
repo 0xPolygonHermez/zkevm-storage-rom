@@ -97,12 +97,12 @@ module.exports = async function compile(fileName, ctx) {
 
     if (isMain) {
         for (let i=0; i<ctx.out.length; i++) {
-            if (typeof ctx.out[i].addressLabel !== "undefined") {
+            if (typeof ctx.out[i].jmpAddressLabel !== "undefined") {
                 if (ctx.out[i].jmp || ctx.out[i].jmpz || ctx.out[i].jmpnz) {
-                    if (typeof ctx.definedLabels[ctx.out[i].addressLabel] === "undefined") {
-                        error(ctx.out[i].line, `Label: ${ctx.out[i].addressLabel} not defined.`);
+                    if (typeof ctx.definedLabels[ctx.out[i].jmpAddressLabel] === "undefined") {
+                        error(ctx.out[i].line, `Label: ${ctx.out[i].jmpAddressLabel} not defined.`);
                     }
-                    ctx.out[i].address = ctx.definedLabels[ctx.out[i].addressLabel];
+                    ctx.out[i].jmpAddress = ctx.definedLabels[ctx.out[i].jmpAddressLabel];
                 } else {
                     throw new Error("Should not enter here");
                 }
