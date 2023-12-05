@@ -12,7 +12,7 @@ Set_Update:
 
     ; Start point: before climbing the tree, get values of: RKEY, OLD_ROOT, NEW_ROOT
 
-    ; TODO VALUE MUST BE NON ZERO, AND AFTER USE VALUE_LOW, VALUE_HIGH ON HASH CALCULATION
+    ; At this point, value isn't zero, it's verified in storage_sm.zkasm
 
     ${GetRkey()} => RKEY
 
