@@ -1,6 +1,6 @@
 {
   "name": "@hermeznetwork/zkasm",
-  "version": "0.0.13",
+  "version": "4.0.0",
   "description": "zkASM Storage compiler",
   "main": "index.js",
   "scripts": {
