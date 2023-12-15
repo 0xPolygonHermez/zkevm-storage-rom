@@ -28,8 +28,8 @@ Set_Update:
     ; NewValueHash = Hash0( VALUE_LOW, VALUE_HIGH )
     ; VALUE_LOW => HASH_LEFT
     ; VALUE_HIGH => HASH_RIGHT
-    ${GetValueLow()} => VALUE_LOW, HASH_LEFT
-    ${GetValueHigh()} => VALUE_HIGH, HASH_RIGHT
+    VALUE_LOW => HASH_LEFT
+    VALUE_HIGH => HASH_RIGHT
     $ => HASH_RIGHT                 :HASH0
 
     ; NewRoot = LeafNodeHash = Hash1( Rkey, Hash( VALUE_LOW, VALUE_HIGH ) )
