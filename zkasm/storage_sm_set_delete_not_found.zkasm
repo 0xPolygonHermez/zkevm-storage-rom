@@ -50,13 +50,13 @@ SDNF_InitLevel:
 
 SDNF_SiblingIsLeft3:
 
-    ; NewRoot = Hash ( SiblingHash, NewRoot )
+    ; NewRoot = Hash0 ( SiblingHash, NewRoot )
     NEW_ROOT => HASH_RIGHT
 
-    ; HASH_LEFT = HASH0 (SiblingLeftChildHash, SiblingRightChildHash)
+    ; HASH_LEFT = Hash0 (SiblingLeftChildHash, SiblingRightChildHash)
     $ => NEW_ROOT                   :HASH0
 
-    ; OldRoot = Hash ( SiblingHash, OldRoot )
+    ; OldRoot = Hash0 ( SiblingHash, OldRoot )
     OLD_ROOT => HASH_RIGHT
     $ => OLD_ROOT                   :HASH0
 
@@ -65,12 +65,12 @@ SDNF_SiblingIsLeft3:
 
 SDNF_SiblingIsRight3:
 
-    ; NewRoot = Hash ( NewRoot, SiblingHash )
+    ; NewRoot = Hash0 ( NewRoot, SiblingHash )
     ; HASH_RIGHT = HASH0 (SiblingLeftChildHash, SiblingRightChildHash)
     NEW_ROOT => HASH_LEFT
     $ => NEW_ROOT                   :HASH0
 
-    ; OldRoot = Hash ( OldRoot, SiblingHash )
+    ; OldRoot = Hash0 ( OldRoot, SiblingHash )
     OLD_ROOT => HASH_LEFT
     $ => OLD_ROOT                   :HASH0
 
@@ -87,12 +87,12 @@ SDNF_ClimbTree:
 
 SDNF_SiblingIsLeft4:
 
-    ; NewRoot = Hash ( SiblingHash, NewRoot )
+    ; NewRoot = Hash0 ( SiblingHash, NewRoot )
     NEW_ROOT => HASH_RIGHT
     ${GetSiblingHash()} => HASH_LEFT
     $ => NEW_ROOT                   :HASH0
 
-    ; OldRoot = Hash ( SiblingHash, OldRoot )
+    ; OldRoot = Hash0 ( SiblingHash, OldRoot )
     OLD_ROOT => HASH_RIGHT
     $ => OLD_ROOT                   :HASH0
 
@@ -101,12 +101,12 @@ SDNF_SiblingIsLeft4:
 
 SDNF_SiblingIsRight4:
 
-    ; NewRoot = Hash ( NewRoot, SiblingHash )
+    ; NewRoot = Hash0 ( NewRoot, SiblingHash )
     NEW_ROOT => HASH_LEFT
     ${GetSiblingHash()} => HASH_RIGHT
     $ => NEW_ROOT                   :HASH0
 
-    ; OldRoot = Hash ( OldRoot, SiblingHash )
+    ; OldRoot = Hash0 ( OldRoot, SiblingHash )
     OLD_ROOT => HASH_LEFT
     $ => OLD_ROOT                   :HASH0
 

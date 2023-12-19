@@ -34,6 +34,12 @@ GCU_HashAndClimbUp:
 
 GCU_Latch:
 
+    ; If you are at this point in the source you have arrived from
+    ; - get_zero operation (NEW_ROOT == 0)
+    ; - get_non_zero operation (NEW_ROOT == 0)
+    ; - zero_to_zero => get_zero operation (NEW_ROOT == 1)
+    ; In case of zero_to_zero, return zero_to_zero source.
+
     NEW_ROOT - 1                    :JMPZ(Set_ZeroToZero_GetZero_Return)
     ; At this point consistency is granted: OLD_ROOT, RKEY (complete key), VALUE_LOW, VALUE_HIGH, LEVEL
     ; Return to the main loop
