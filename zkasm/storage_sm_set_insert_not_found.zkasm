@@ -16,8 +16,8 @@ Set_InsertNotFound:
     ; Create the a new leaf nodes for the new value
 
     ; NewValueHash = Hash0( VALUE_LOW, VALUE_HIGH )
-    ${GetValueLow()} => VALUE_LOW, HASH_LEFT
-    ${GetValueHigh()} => VALUE_HIGH, HASH_RIGHT
+    VALUE_LOW => HASH_LEFT
+    VALUE_HIGH => HASH_RIGHT
 
     $ => HASH_RIGHT                 :HASH0
 
@@ -49,8 +49,9 @@ SINF_ClimbTree:
 SINF_SiblingIsLeft3:
 
     ; NewRoot = Hash ( SiblingHash, NewRoot )
-    NEW_ROOT => HASH_RIGHT
     ${GetSiblingHash()} => HASH_LEFT
+    NEW_ROOT => HASH_RIGHT
+
     $ => NEW_ROOT                   :HASH0
 
     ; OldRoot = Hash ( SiblingHash, OldRoot )

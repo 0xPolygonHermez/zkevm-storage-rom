@@ -33,8 +33,8 @@ Set_InsertFound:
     $ => OLD_ROOT                   :HASH1
 
     ; NewValueHash = Hash0( VALUE_LOW, VALUE_HIGH )
-    ${GetValueLow()} => VALUE_LOW, HASH_LEFT
-    ${GetValueHigh()} => VALUE_HIGH, HASH_RIGHT
+    VALUE_LOW => HASH_LEFT
+    VALUE_HIGH => HASH_RIGHT
     $ => HASH_RIGHT                 :HASH0
 
     ; NewRoot = LeafNodeHash = Hash1( RKEY, Hash0( VALUE_LOW, VALUE_HIGH ) )
