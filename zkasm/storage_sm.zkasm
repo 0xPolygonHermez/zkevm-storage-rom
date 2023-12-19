@@ -10,7 +10,7 @@ Run:
     ROTL_VH => VALUE_HIGH                       :JMPNZ(ValueLowIsNonZero)
 
 
-    ${GetValueHigh()} => VALUE_HIGH,NEW_ROOT    :JMPNZ(ValueIsNonZero)
+    ${GetValueHigh()} => VALUE_HIGH,NEW_ROOT    :JMPNZ(ValueHighIsNonZero)
     ROTL_VH => VALUE_HIGH                       :JMPNZ(ValueHighIsNonZero)
     ROTL_VH => VALUE_HIGH                       :JMPNZ(ValueHighIsNonZero)
     ROTL_VH => VALUE_HIGH                       :JMPNZ(ValueHighIsNonZero)
@@ -47,8 +47,6 @@ ValueIsZero:
     ;     hash was different, leaf node use hash1, intermediate use hash0.
     ; (3) Old value is zero, .....
 
-    0 => VALUE_LOW, VALUE_HIGH, NEW_ROOT
-
     ${isGet()}                                  :JMPNZ(Get_Zero)
     ${isSetDeleteFound()}                       :JMPNZ(Set_DeleteFound)
     ${isSetDeleteNotFound()}                    :JMPNZ(Set_DeleteNotFound)
@@ -65,7 +63,6 @@ INCLUDE "storage_sm_set_delete_found.zkasm"
 INCLUDE "storage_sm_set_delete_not_found.zkasm"
 INCLUDE "storage_sm_set_zero_to_zero.zkasm"
 
-AssertFails:
 SetAllToZero:
     ; Reset the registers to 0 for the rest of the evaluations
     0 => HASH_LEFT, HASH_RIGHT, OLD_ROOT, NEW_ROOT, VALUE_LOW, VALUE_HIGH, SIBLING_VALUE_HASH, RKEY, SIBLING_RKEY, RKEY_BIT, LEVEL
@@ -76,3 +73,7 @@ NotEndPol:
 
     ; The last evaluation instruction: jump to the beginning of the main rom loop, i.e. to label 0
                                                 :JMP(Run)
+
+    ; Simulate an ASSERT, pil verification fails because when finish trace not jump to row 0.
+AssertFails:
+    :JMP(AssertFails)
