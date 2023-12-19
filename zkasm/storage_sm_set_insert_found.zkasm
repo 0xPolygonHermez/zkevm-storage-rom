@@ -27,7 +27,7 @@ Set_InsertFound:
     ${GetSiblingValueHigh()} => HASH_RIGHT
     $ => SIBLING_VALUE_HASH, HASH_RIGHT :HASH0
 
-    ; OldRoot = LeafNodeHash = Hash1( SIBLING_RKEY, Hash(0 SIBLING_VALUE_LOW, SIBLING_VALUE_HIGH ) )
+    ; OldRoot = LeafNodeHash = Hash1( SIBLING_RKEY, Hash0(SIBLING_VALUE_LOW, SIBLING_VALUE_HIGH ) )
     ${GetSiblingRkey()} => SIBLING_RKEY
     SIBLING_RKEY => HASH_LEFT
     $ => OLD_ROOT                   :HASH1
@@ -43,8 +43,7 @@ Set_InsertFound:
 
 SIF_InitLevel:
 
-    ; Init LEVEL register to {1,0,0,0}, and inversely rotate it level%4 times,
-    ; so that after level rotations the position of LEVEL becomes {1,0,0,0} again
+    ; Init LEVEL register
     ${GetLevel()} => LEVEL
 
     ; Create the first intermediate node that joins the old and the new value's leaf nodes
@@ -126,12 +125,12 @@ SIF_ClimbTree:
 
 SIF_SiblingIsLeft3:
 
-    ; NewRoot = Hash ( SiblingHash, NewRoot )
+    ; NewRoot = Hash0 ( SiblingHash, NewRoot )
     NEW_ROOT => HASH_RIGHT
     ${GetSiblingHash()} => HASH_LEFT
     $ => NEW_ROOT                   :HASH0
 
-    ; OldRoot = Hash ( SiblingHash, OldRoot )
+    ; OldRoot = Hash0 ( SiblingHash, OldRoot )
     OLD_ROOT => HASH_RIGHT
     $ => OLD_ROOT                   :HASH0
 
@@ -141,12 +140,12 @@ SIF_SiblingIsLeft3:
 
 SIF_SiblingIsRight3:
 
-    ; NewRoot = Hash ( NewRoot, SiblingHash )
+    ; NewRoot = Hash0 ( NewRoot, SiblingHash )
     NEW_ROOT => HASH_LEFT
     ${GetSiblingHash()} => HASH_RIGHT
     $ => NEW_ROOT                   :HASH0
 
-    ; OldRoot = Hash ( OldRoot, SiblingHash )
+    ; OldRoot = Hash0 ( OldRoot, SiblingHash )
     OLD_ROOT => HASH_LEFT
     $ => OLD_ROOT                   :HASH0
 

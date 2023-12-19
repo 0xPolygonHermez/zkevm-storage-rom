@@ -26,8 +26,10 @@ GZ_Zero:
 
 GZ_LeafNode:
 
-    ; How was a leaf node, will calculate hash of leaf.
+    ; How was a leaf node, will calculate hash of leaf. This leaf really
+    ; isn't a sibling, it's a leaf node of other key found in my path.
 
+    ; FUTURE OPTIMIZATION: directly get hash of old value, save one hash.
     ${GetSiblingValueLow()} => HASH_LEFT
     ${GetSiblingValueHigh()} => HASH_RIGHT
     $ => HASH_RIGHT                 :HASH0
@@ -37,14 +39,16 @@ GZ_LeafNode:
     ; backup of value_high
     VALUE_HIGH => SIBLING_VALUE_HASH
 
-    ; verify that RKEY and SIBLING_RKEY are differents
+    ; verify that RKEY and SIBLING_RKEY are differents, leave difference
+    ; on VALUE_HIGH to rotate it and verify all chunks. JMPNZ only check
+    ; the less significant chunk (goldilocks)
 
     RKEY - SIBLING_RKEY => VALUE_HIGH   :JMPNZ(GZ_SiblingRKey_RKey_differents)
     ROTL_VH => VALUE_HIGH               :JMPNZ(GZ_SiblingRKey_RKey_differents)
     ROTL_VH => VALUE_HIGH               :JMPNZ(GZ_SiblingRKey_RKey_differents)
     ROTL_VH => VALUE_HIGH               :JMPNZ(GZ_SiblingRKey_RKey_differents)
 
-    ; Invalid situation, finish execution of ROM, and not set latch get.
+    ; MAP. Invalid situation, finish execution of ROM, and not set latch get.
                                         :JMP(AssertFails)
 
 GZ_SiblingRKey_RKey_differents:
@@ -66,6 +70,5 @@ GZ_IntermediateNode:
 
 GZ_InitLevel:
 
-    ; Init LEVEL register to {1,0,0,0}, and inversely rotate it level%4 times,
-    ; so that after level rotations the position of LEVEL becomes {1,0,0,0} again
+    ; Init LEVEL
     ${GetLevel()} => LEVEL          :JMP(Get_ClimbUp)

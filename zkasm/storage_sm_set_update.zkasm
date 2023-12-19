@@ -16,12 +16,13 @@ Set_Update:
 
     ${GetRkey()} => RKEY
 
+    ; FUTURE OPTIMIZATION: get directly hash of old value. Save one hash.
     ; OldValueHash = Hash0( OLD_VALUE_LOW, OLD_VALUE_HIGH )
     ${GetOldValueLow()} => HASH_LEFT
     ${GetOldValueHigh()} => HASH_RIGHT
     $ => HASH_RIGHT                 :HASH0
 
-    ; OldRoot = LeafNodeHash = Hash1( Rkey, Hash( VALUE_LOW, VALUE_HIGH ) )
+    ; OldRoot = LeafNodeHash = Hash1( Rkey, Hash0( VALUE_LOW, VALUE_HIGH ) )
     RKEY => HASH_LEFT
     $ => OLD_ROOT                   :HASH1
 
@@ -38,8 +39,7 @@ Set_Update:
 
 SU_InitLevel:
 
-    ; Init LEVEL register to {1,0,0,0}, and inversely rotate it level%4 times,
-    ; so that after level rotations the position of LEVEL becomes {1,0,0,0} again
+    ; Init LEVEL
     ${GetLevel()} => LEVEL
 
 SU_ClimbTree:

@@ -18,10 +18,9 @@ Get_NonZero:
     VALUE_HIGH => HASH_RIGHT
     $ => HASH_RIGHT                 :HASH0
 
-    ; OldRoot = LeafNodeHash = Hash1( Rkey, Hash( VALUE_LOW, VALUE_HIGH ) )
+    ; OldRoot = LeafNodeHash = Hash1( Rkey, Hash0( VALUE_LOW, VALUE_HIGH ) )
     ${GetRkey()} => RKEY, HASH_LEFT
     $ => OLD_ROOT                   :HASH1
 
-    ; Init LEVEL register to {1,0,0,0}, and inversely rotate it level%4 times,
-    ; so that after level rotations the position of LEVEL becomes {1,0,0,0} again
+    ; Init LEVEL
     ${GetLevel()} => LEVEL          :JMP(Get_ClimbUp)
