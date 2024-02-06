@@ -25,11 +25,12 @@ HASH1                   { return 'HASH1' }
 LATCH_SET               { return 'LATCH_SET' }
 LATCH_GET               { return 'LATCH_GET' }
 CLIMB_RKEY              { return 'CLIMB_RKEY' }
+CLIMB_RKEY_N            { return 'CLIMB_RKEY_N' }
 CLIMB_SIBLING_RKEY      { return 'CLIMB_SIBLING_RKEY' }
 CLIMB_SIBLING_RKEY_N    { return 'CLIMB_SIBLING_RKEY_N' }
+JMPNZ                   { return 'JMPNZ' }
 JMPZ                    { return 'JMPZ' }
 JMP                     { return 'JMP' }
-ROTATE_LEVEL            { return 'ROTATE_LEVEL' }
 ROTL_VH                 { return 'ROTL_VH' }
 INCLUDE                 { return 'INCLUDE' }
 \"[^"]+\"               { yytext = yytext.slice(1,-1); return 'STRING'; }
@@ -198,7 +199,7 @@ inReg
         {
             $$ = {type: 'TAG' , tag: $1}
         }
-    | reg
+    | inValidRegs
         {
             $$ = {type: 'REG' , reg: $1}
         }
@@ -239,51 +240,53 @@ opList
 op
     : JMP '(' IDENTIFIER ')'
         {
-            $$ = {iJmp: 1n, addressLabel: $3}
+            $$ = { jmp: 1, jmpAddressLabel: $3 }
         }
     | JMPZ '(' IDENTIFIER ')'
         {
-            $$ = {iJmpz: 1n, addressLabel: $3}
+            $$ = { jmpz: 1, jmpAddressLabel: $3 }
+        }
+    | JMPNZ '(' IDENTIFIER ')'
+        {
+            $$ = { jmpnz: 1, jmpAddressLabel: $3 }
         }
     | HASH0
         {
-            $$ = {iHash: 1n, iHashType: 0}
+            $$ = { hash: 1, hashType: 0}
         }
     | HASH1
         {
-            $$ = {iHash: 1n, iHashType: 1}
+            $$ = { hash: 1, hashType: 1}
         }
     | LATCH_SET
         {
-            $$ = {iLatchSet: 1n}
+            $$ = { latchSet: 1 }
         }
     | LATCH_GET
         {
-            $$ = {iLatchGet: 1n}
+            $$ = { latchGet: 1 }
         }
     | CLIMB_RKEY
         {
-            $$ = {iClimbRkey: 1n}
+            $$ = { climbRkey: 1, climbSiblingRkey: 0, climbBitN: 0 }
+        }
+    | CLIMB_RKEY_N
+        {
+            $$ = { climbRkey: 1, climbSiblingRkey: 0, climbBitN: 1 }
         }
     | CLIMB_SIBLING_RKEY
         {
-            $$ = { iClimbSiblingRkey: 1n}
+            $$ = { climbRkey: 0, climbSiblingRkey: 1, climbBitN: 0 }
         }
     | CLIMB_SIBLING_RKEY_N
         {
-            $$ = { iClimbSiblingRkeyN: 1n}
-        }
-    | ROTATE_LEVEL
-        {
-            $$ = { iRotateLevel: 1n}
+            $$ = { climbRkey: 0, climbSiblingRkey: 1, climbBitN: 1 }
         }
     ;
 
 
 reg
-    : HASH_LEFT
-    | HASH_RIGHT
-    | OLD_ROOT
+    : OLD_ROOT
     | NEW_ROOT
     | VALUE_LOW
     | VALUE_HIGH
@@ -292,7 +295,21 @@ reg
     | SIBLING_RKEY
     | RKEY_BIT
     | LEVEL
-    | PC
     | ROTL_VH
+    | HASH_LEFT
+    | HASH_RIGHT
+    | PC
     ;
 
+inValidRegs
+    : OLD_ROOT
+    | NEW_ROOT
+    | VALUE_LOW
+    | VALUE_HIGH
+    | SIBLING_VALUE_HASH
+    | RKEY
+    | SIBLING_RKEY
+    | RKEY_BIT
+    | LEVEL
+    | ROTL_VH
+    ;

@@ -13,6 +13,7 @@ module.exports = async function compile(fileName, ctx) {
             definedLabels: {},
             refs: [],
             out: [],
+            srcLines: []
         }
         isMain = true;
     } else {
@@ -40,6 +41,8 @@ module.exports = async function compile(fileName, ctx) {
             relativeFileName = fullFileName;
         }
     }
+
+    ctx.srcLines[relativeFileName] = src.split(/(?:\r\n|\n|\r)/);
 
     for (let i=0; i<lines.length; i++) {
         const l = lines[i];
@@ -94,12 +97,12 @@ module.exports = async function compile(fileName, ctx) {
 
     if (isMain) {
         for (let i=0; i<ctx.out.length; i++) {
-            if (typeof ctx.out[i].addressLabel !== "undefined") {
-                if (ctx.out[i].iJmp || ctx.out[i].iJmpz) {
-                    if (typeof ctx.definedLabels[ctx.out[i].addressLabel] === "undefined") {
-                        error(ctx.out[i].line, `Label: ${ctx.out[i].addressLabel} not defined.`);
+            if (typeof ctx.out[i].jmpAddressLabel !== "undefined") {
+                if (ctx.out[i].jmp || ctx.out[i].jmpz || ctx.out[i].jmpnz) {
+                    if (typeof ctx.definedLabels[ctx.out[i].jmpAddressLabel] === "undefined") {
+                        error(ctx.out[i].line, `Label: ${ctx.out[i].jmpAddressLabel} not defined.`);
                     }
-                    ctx.out[i].address = ctx.definedLabels[ctx.out[i].addressLabel];
+                    ctx.out[i].jmpAddress = ctx.definedLabels[ctx.out[i].jmpAddressLabel];
                 } else {
                     throw new Error("Should not enter here");
                 }
@@ -113,6 +116,7 @@ module.exports = async function compile(fileName, ctx) {
             }
             ctx.out[i].fileName = ctx.out[i].line.fileName;
             ctx.out[i].line = ctx.out[i].line.line;
+            ctx.out[i].lineStr = ctx.srcLines[ctx.out[i].fileName][ctx.out[i].line - 1] ?? '';
         }
 
         const res = {
@@ -141,15 +145,19 @@ function processAssignmentIn(input) {
     let E1, E2;
     if (input.type == "TAG") {
         res.freeInTag = input.tag ? command_parser.parse(input.tag) : { op: ""};
-        res.inFREE = 1n;
+        res.inFREE = 1;
         return res;
     }
     if (input.type == "REG") {
-        res["in"+ input.reg] = 1n;
+        res["in"+ input.reg] = 1;
         return res;
     }
     if (input.type == "CONST") {
-        res.CONST = BigInt(input.const);
+        const value = BigInt(input.const);
+        if (value >= (2n ** 32n) || value < -(2n ** 32n)) {
+            throw new Error(`Value ${value} too big`);
+        }
+        res.CONST = Number(value);
         return res;
     }
     if (input.type == "exp") {
